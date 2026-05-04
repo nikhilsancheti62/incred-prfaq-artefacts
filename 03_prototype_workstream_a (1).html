@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InCred PL · Workstream A — Complete Working Flow v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-orange: #EE7B22;
+    --brand-orange-dark: #D66A18;
+    --brand-purple: #532F8B;
+    --orange-cream: #FFF6EF;
+    --gray-text: #424242;
+    --gray-500: #999999;
+    --gray-400: #B3B3B3;
+    --gray-300: #C7C9C9;
+    --gray-100: #F1F1F1;
+    --alert-green: #0CAF0C;
+    --text-primary: #424242;
+    --text-secondary: #6B6B6B;
+    --text-tertiary: #999999;
+    --border: #E0E0E0;
+    --border-strong: #C7C9C9;
+    --font-primary: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --r-md: 10px;
+    --r-lg: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-primary);
+    background: linear-gradient(135deg, #2A2A2A 0%, #1A1A1A 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .phone {
+    width: 380px;
+    height: 800px;
+    background: #fff;
+    border-radius: 32px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 8px #1a1a1a, 0 0 0 9px #444;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .screen {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    animation: fadeIn 0.3s ease;
+  }
+  .screen.active { display: flex; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideBack {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .screen.back { animation: slideBack 0.3s ease; }
+
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex-shrink: 0;
+  }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+  .status-bar .battery {
+    width: 22px; height: 11px;
+    border: 1.2px solid var(--text-primary);
+    border-radius: 2px;
+    position: relative;
+    margin-left: 2px;
+  }
+  .status-bar .battery::after {
+    content: ''; position: absolute; right: -3px; top: 3px;
+    width: 1.5px; height: 4px; background: var(--text-primary); border-radius: 0 1px 1px 0;
+  }
+  .status-bar .battery::before {
+    content: ''; position: absolute; left: 1.5px; top: 1.5px;
+    width: 50%; height: 6px; background: var(--text-primary); border-radius: 1px;
+  }
+
+  .app-header { display: flex; align-items: center; padding: 6px 20px 12px; gap: 14px; flex-shrink: 0; }
+  .back-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 24px; color: var(--text-primary); padding: 0;
+    line-height: 1; font-weight: 300;
+    transition: opacity 0.15s;
+  }
+  .back-btn:hover { opacity: 0.6; }
+  .app-header h2 {
+    font-size: 16px; font-weight: 700;
+    color: var(--text-primary);
+    flex: 1; text-align: center; margin-right: 22px;
+  }
+
+  .brand-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 20px 14px;
+    border-bottom: 1px solid var(--gray-100);
+    flex-shrink: 0;
+  }
+  .brand { display: flex; align-items: baseline; gap: 4px; font-style: italic; letter-spacing: -0.5px; }
+  .brand .incred { color: var(--brand-orange); font-size: 18px; font-weight: 800; }
+  .brand .finance { color: var(--brand-purple); font-size: 17px; font-weight: 500; }
+  .help-link { color: var(--brand-orange); font-size: 14px; font-weight: 700; cursor: pointer; }
+
+  .phone-body { flex: 1; padding: 20px 20px 110px; overflow-y: auto; }
+
+  .screen-title {
+    font-size: 18px; font-weight: 800;
+    margin-bottom: 6px; color: var(--text-primary); line-height: 1.3;
+  }
+  .screen-subtitle {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .cta-container {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 16px 20px 22px; background: #fff;
+    border-top: 1px solid var(--gray-100);
+  }
+  .btn {
+    width: 100%; padding: 13px;
+    border-radius: var(--r-md);
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; border: none;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .btn-primary { background: var(--brand-orange); color: #fff; }
+  .btn-primary:hover { background: var(--brand-orange-dark); }
+  .btn-primary:disabled { background: var(--gray-300); color: #fff; cursor: not-allowed; }
+  .btn-outlined {
+    background: #fff; color: var(--brand-orange);
+    border: 1.5px solid var(--brand-orange);
+  }
+  .btn-outlined:hover { background: var(--orange-cream); }
+  .btn-row { display: flex; gap: 12px; }
+  .btn-row .btn { flex: 1; }
+
+  .option-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-md);
+    cursor: pointer; margin-bottom: 10px;
+    background: #fff;
+    transition: all 0.15s;
+  }
+  .option-card:hover { border-color: var(--border-strong); }
+  .option-card.selected {
+    border-color: var(--brand-orange);
+    background: var(--orange-cream);
+  }
+  .option-card .emoji-icon {
+    font-size: 28px; line-height: 1; flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .option-card.selected .emoji-icon {
+    background: #fff; box-shadow: 0 1px 4px rgba(238, 123, 34, 0.2);
+  }
+  .option-card .text-wrap { flex: 1; }
+  .option-card .label {
+    font-size: 14px; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 2px;
+  }
+  .option-card .hint {
+    font-size: 12px; color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .selected-summary {
+    background: var(--orange-cream);
+    border: 1px solid #FAD9BA;
+    border-radius: var(--r-md);
+    padding: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .selected-summary .emoji-icon {
+    font-size: 24px;
+    line-height: 1;
+    width: 40px; height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .selected-summary .label-wrap { flex: 1; }
+  .selected-summary .label-small {
+    font-size: 11px; color: var(--text-secondary);
+    margin-bottom: 2px;
+  }
+  .selected-summary .label-big {
+    font-size: 14px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .selected-summary .edit-link {
+    color: var(--brand-orange);
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .selected-summary .edit-link:hover { background: rgba(238, 123, 34, 0.1); }
+
+  .field-group { margin-bottom: 16px; }
+  .field-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .field-label {
+    font-size: 12px; font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+  }
+  .help-icon {
+    width: 16px; height: 16px;
+    border: 1.2px solid var(--gray-400);
+    border-radius: 50%;
+    color: var(--gray-500);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: help;
+  }
+  .field-helper {
+    font-size: 11px; color: var(--text-secondary);
+    margin-bottom: 8px; line-height: 1.4;
+  }
+  .field-input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-md);
+    font-size: 14px; font-family: inherit;
+    background: #fff; color: var(--text-primary);
+    font-weight: 500;
+    transition: border-color 0.15s;
+  }
+  .field-input:focus { outline: none; border-color: var(--brand-orange); }
+  .field-input::placeholder { color: var(--text-tertiary); font-weight: 400; }
+  .field-input.with-icon-prefix { padding-left: 38px; }
+  .field-input[readonly] { cursor: pointer; }
+
+  .input-wrap { position: relative; }
+  .input-icon {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px; color: var(--text-secondary);
+    pointer-events: none;
+  }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '⌄'; position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-65%);
+    color: var(--text-secondary); font-size: 16px;
+    pointer-events: none;
+  }
+  .field-input.is-select { cursor: pointer; padding-right: 36px; }
+
+  /* GST select with radio indicator (matches existing screen) */
+  .gst-select-card {
+    border: 1.5px solid var(--brand-orange);
+    border-radius: var(--r-md);
+    padding: 14px;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.15s;
+  }
+  .gst-select-card:hover { background: var(--orange-cream); }
+  .gst-select-card .gst-radio {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--brand-orange);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    background: #fff;
+  }
+  .gst-select-card .gst-radio::after {
+    content: '';
+    position: absolute;
+    top: 4px; left: 4px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+  }
+  .gst-select-card .gst-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .gst-select-card .chevron {
+    color: var(--text-secondary);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* Field with leading icon (building, briefcase, etc.) */
+  .field-input.with-leading-icon { padding-left: 42px; }
+  .input-leading-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .info-callout {
+    background: #F1F5FB;
+    border: 1px solid #D6E4F4;
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 8px;
+  }
+  .info-callout .info-icon {
+    width: 20px; height: 20px;
+    background: #4F9BC1;
+    border-radius: 50%;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0; font-style: italic;
+  }
+  .info-callout p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .info-callout p strong { color: var(--text-primary); font-weight: 700; }
+
+  /* Platforms */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .platform-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 14px 6px 12px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .platform-card:hover { border-color: var(--border-strong); }
+  .platform-card.selected {
+    border-color: var(--brand-orange);
+    background: var(--orange-cream);
+  }
+  .platform-card .logo-circle {
+    width: 44px; height: 44px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+    color: #fff;
+  }
+  .platform-card .name {
+    font-size: 11.5px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .platform-card .check-mark {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 18px; height: 18px;
+    background: var(--brand-orange);
+    border-radius: 50%;
+    display: none;
+    align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 800;
+  }
+  .platform-card.selected .check-mark { display: flex; }
+
+  .logo-swiggy { background: #FC8019; }
+  .logo-zomato { background: #E23744; }
+  .logo-uber { background: #000; }
+  .logo-ola { background: linear-gradient(135deg, #97D700, #00B25A); }
+  .logo-uc { background: #6C2BD9; }
+  .logo-other { background: var(--gray-100); color: var(--text-primary); font-size: 22px; font-weight: 300; }
+
+  .other-platform-input {
+    margin-top: 4px;
+    margin-bottom: 14px;
+    display: none;
+    animation: slideDown 0.25s ease;
+  }
+  .other-platform-input.visible { display: block; }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .tip-card {
+    background: var(--gray-100);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .tip-card .tip-icon {
+    width: 20px; height: 20px;
+    background: var(--brand-orange);
+    border-radius: 50%; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0; font-style: italic;
+  }
+  .tip-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    margin: 30px auto 20px;
+    background: #E8F5E9;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .success-icon svg { width: 40px; height: 40px; }
+  .success-title {
+    text-align: center;
+    font-size: 22px; font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .success-msg {
+    text-align: center;
+    font-size: 13px; color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 24px;
+    padding: 0 8px;
+  }
+  .data-summary {
+    background: var(--gray-100);
+    border-radius: var(--r-md);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .data-summary h4 {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #fff;
+    gap: 12px;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-row .key { color: var(--text-secondary); flex-shrink: 0; }
+  .data-row .val { color: var(--text-primary); font-weight: 700; text-align: right; }
+
+  /* Sidebar */
+  .info-panel {
+    width: 360px;
+    color: #E8E8E8;
+    flex-shrink: 0;
+    max-height: 800px;
+    overflow-y: auto;
+  }
+  .info-panel h1 {
+    font-size: 18px; font-weight: 800;
+    color: #fff; margin-bottom: 6px;
+  }
+  .info-panel .subtitle {
+    font-size: 13px; color: #888;
+    line-height: 1.55; margin-bottom: 20px;
+  }
+  .state-readout {
+    background: #2A2A2A;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #333;
+  }
+  .state-readout h3 {
+    font-size: 11px; font-weight: 800;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .state-row {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #333;
+    font-size: 12px; gap: 8px;
+  }
+  .state-row:last-child { border-bottom: none; }
+  .state-row .key { color: #888; flex-shrink: 0; }
+  .state-row .val {
+    color: #fff; font-weight: 600;
+    background: #333;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    max-width: 180px;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .state-row .val.empty { color: #555; background: transparent; }
+  .state-row .val.brand { background: var(--brand-orange); color: #fff; }
+
+  .flow-map {
+    background: #2A2A2A;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+    border: 1px solid #333;
+  }
+  .flow-map h3 {
+    font-size: 11px; font-weight: 800;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .flow-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #888;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .flow-item:hover { background: #333; color: #ccc; }
+  .flow-item.active {
+    background: rgba(238, 123, 34, 0.15);
+    color: #fff;
+    border-color: var(--brand-orange);
+  }
+  .flow-item.disabled { opacity: 0.4; cursor: not-allowed; }
+  .flow-item.disabled:hover { background: transparent; }
+  .flow-item .num {
+    width: 22px; height: 22px;
+    background: #444;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .flow-item.active .num {
+    background: var(--brand-orange);
+    color: #fff;
+  }
+  .flow-arrow {
+    font-size: 10px;
+    color: #555;
+    text-align: center;
+    padding: 2px 0;
+  }
+  .flow-arrow.cond {
+    color: var(--brand-orange);
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+  }
+
+  .step-info {
+    background: #2A2A2A;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+    border-left: 3px solid var(--brand-orange);
+  }
+  .step-info h4 {
+    font-size: 12px; font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .step-info p {
+    font-size: 12px;
+    color: #B5B5B5;
+    line-height: 1.55;
+  }
+
+  .reset-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    color: #999;
+    border: 1px solid #444;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .reset-btn:hover { color: #fff; border-color: #666; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="phone">
+
+    <!-- SCREEN 1A -->
+    <div class="screen active" id="screen-1a">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title">How do you earn?</h3>
+        <p class="screen-subtitle">Help us understand how you earn so we can offer you the right loan.</p>
+
+        <div class="option-card" data-emp="salaried" onclick="selectEmp('salaried')">
+          <div class="emoji-icon">👔</div>
+          <div class="text-wrap">
+            <div class="label">Salaried</div>
+            <div class="hint">I work for a company and get a regular monthly salary in bank account</div>
+          </div>
+        </div>
+        <div class="option-card" data-emp="self" onclick="selectEmp('self')">
+          <div class="emoji-icon">🏪</div>
+          <div class="text-wrap">
+            <div class="label">Self-employed</div>
+            <div class="hint">I run my own business or shop</div>
+          </div>
+        </div>
+        <div class="option-card" data-emp="indep" onclick="selectEmp('indep')">
+          <div class="emoji-icon">🛵</div>
+          <div class="text-wrap">
+            <div class="label">Independent professional</div>
+            <div class="hint">I drive, deliver, or provide services through mobile apps</div>
+          </div>
+        </div>
+        <div class="option-card" data-emp="others" onclick="selectEmp('others')">
+          <div class="emoji-icon">🧑‍💻</div>
+          <div class="text-wrap">
+            <div class="label">Others</div>
+            <div class="hint">Salary paid in cash, daily or weekly salary, or multiple income sources</div>
+          </div>
+        </div>
+      </div>
+      <div class="cta-container">
+        <div class="btn-row">
+          <button class="btn btn-outlined">Go back</button>
+          <button class="btn btn-primary" id="proceed-1a" disabled onclick="goToScreen('1b')">Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 1B -->
+    <div class="screen" id="screen-1b">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="app-header">
+        <button class="back-btn" onclick="goToScreen('1a', true)">‹</button>
+        <h2>InCred Personal Loan</h2>
+      </div>
+      <div class="brand-row" style="padding-top: 0;">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title" id="screen-1b-title">Tell us about your income</h3>
+        <p class="screen-subtitle" id="screen-1b-subtitle">A few details so we can finalize your offer.</p>
+
+        <div class="selected-summary">
+          <div class="emoji-icon" id="summary-emoji">👔</div>
+          <div class="label-wrap">
+            <div class="label-small">Employment type</div>
+            <div class="label-big" id="summary-label">Salaried</div>
+          </div>
+          <span class="edit-link" onclick="goToScreen('1a', true)">Edit</span>
+        </div>
+
+        <div id="dynamic-fields"></div>
+      </div>
+      <div class="cta-container">
+        <div class="btn-row">
+          <button class="btn btn-outlined" onclick="goToScreen('1a', true)">Go back</button>
+          <button class="btn btn-primary" id="proceed-1b" onclick="proceedFrom1B()">Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 1C -->
+    <div class="screen" id="screen-1c">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="app-header">
+        <button class="back-btn" onclick="goToScreen('1b', true)">‹</button>
+        <h2>InCred Personal Loan</h2>
+      </div>
+      <div class="brand-row" style="padding-top: 0;">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title">Which apps do you work with?</h3>
+        <p class="screen-subtitle">Select all that apply. We'll use this to better understand your earnings.</p>
+
+        <div class="platform-grid">
+          <div class="platform-card" data-platform="swiggy" onclick="togglePlatform('swiggy')">
+            <div class="check-mark">✓</div>
+            <div class="logo-circle logo-swiggy">S</div>
+            <div class="name">Swiggy</div>
+          </div>
+          <div class="platform-card" data-platform="zomato" onclick="togglePlatform('zomato')">
+            <div class="check-mark">✓</div>
+            <div class="logo-circle logo-zomato">Z</div>
+            <div class="name">Zomato</div>
+          </div>
+          <div class="platform-card" data-platform="uber" onclick="togglePlatform('uber')">
+            <div class="check-mark">✓</div>
+            <div class="logo-circle logo-uber">U</div>
+            <div class="name">Uber</div>
+          </div>
+          <div class="platform-card" data-platform="ola" onclick="togglePlatform('ola')">
+            <div class="check-mark">✓</div>
+            <div class="logo-circle logo-ola">Ola</div>
+            <div class="name">Ola</div>
+          </div>
+          <div class="platform-card" data-platform="uc" onclick="togglePlatform('uc')">
+            <div class="check-mark">✓</div>
+            <div class="logo-circle logo-uc">UC</div>
+            <div class="name">Urban Co.</div>
+          </div>
+          <div class="platform-card" data-platform="others" onclick="togglePlatform('others')">
+            <div class="check-mark">✓</div>
+            <div class="logo-circle logo-other">+</div>
+            <div class="name">Others</div>
+          </div>
+        </div>
+
+        <div class="other-platform-input" id="other-platform-input">
+          <div class="field-group" style="margin-bottom: 0;">
+            <div class="field-label-row">
+              <label class="field-label">Tell us which apps you work with</label>
+            </div>
+            <div class="field-helper">Type the names of apps not listed above</div>
+            <input type="text" class="field-input" id="other-platform-text" placeholder="e.g. Rapido, Zepto, Porter">
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-icon">i</div>
+          <p>Selecting your apps helps us verify your earnings faster and may unlock better offers.</p>
+        </div>
+      </div>
+      <div class="cta-container">
+        <div class="btn-row">
+          <button class="btn btn-outlined" onclick="goToScreen('1b', true)">Go back</button>
+          <button class="btn btn-primary" id="proceed-1c" disabled onclick="goToScreen('done')">Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="screen" id="screen-done">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0CAF0C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="success-title">Basic details captured</div>
+        <div class="success-msg">Up next: bureau check + offer generation. (This is the end of Workstream A — banking flow continues from here.)</div>
+
+        <div class="data-summary" id="data-summary"></div>
+
+        <div class="tip-card">
+          <div class="tip-icon">i</div>
+          <p>This is a prototype boundary. In production, the next step is the bureau pull and the offer screen.</p>
+        </div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" onclick="resetFlow()">Start over</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INFO PANEL -->
+  <aside class="info-panel">
+    <h1>Workstream A — Complete flow v3</h1>
+    <p class="subtitle">Self-employed retains GST + business setup type fields. Others copy refined.</p>
+
+    <div class="state-readout">
+      <h3>Current state</h3>
+      <div class="state-row">
+        <span class="key">Screen</span>
+        <span class="val brand" id="current-screen-readout">Screen 1A</span>
+      </div>
+      <div class="state-row">
+        <span class="key">Employment</span>
+        <span class="val empty" id="emp-readout">None yet</span>
+      </div>
+      <div class="state-row">
+        <span class="key">Platforms</span>
+        <span class="val empty" id="plat-readout">—</span>
+      </div>
+    </div>
+
+    <div class="flow-map">
+      <h3>Flow map</h3>
+      <div class="flow-item active" data-screen="1a" onclick="goToScreen('1a')">
+        <div class="num">1A</div>
+        <div>Pick employment</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-item" data-screen="1b" id="flow-1b" onclick="if(canGoTo('1b')) goToScreen('1b')">
+        <div class="num">1B</div>
+        <div>Income & details</div>
+      </div>
+      <div class="flow-arrow cond" id="flow-arrow-1c">↓ if Independent professional</div>
+      <div class="flow-item" data-screen="1c" id="flow-1c" onclick="if(canGoTo('1c')) goToScreen('1c')">
+        <div class="num">1C</div>
+        <div>Select apps</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-item" data-screen="done" id="flow-done" onclick="if(canGoTo('done')) goToScreen('done')">
+        <div class="num">✓</div>
+        <div>Captured</div>
+      </div>
+    </div>
+
+    <div class="step-info">
+      <h4 id="step-title">Step 1A — Pick employment type</h4>
+      <p id="step-desc">Tap any option to select it. The "Proceed" button will activate. The next screen will show different fields based on what you pick.</p>
+    </div>
+
+    <button class="reset-btn" onclick="resetFlow()">Reset prototype</button>
+  </aside>
+
+</div>
+
+<script>
+  const state = {
+    selectedEmployment: null,
+    selectedPlatforms: new Set(),
+    formValues: {},
+    currentScreen: '1a'
+  };
+
+  const EMPLOYMENT_CONFIG = {
+    salaried: {
+      emoji: '👔',
+      label: 'Salaried',
+      title: 'Tell us about your income',
+      subtitle: 'A few details so we can finalize your offer.',
+      fields: [
+        { type: 'currency', name: 'income', label: 'In-hand monthly salary', helper: 'The amount that you receive in your bank account monthly', placeholder: 'Enter salary amount', showHelp: true },
+        { type: 'select', name: 'company', label: 'Company name', helper: 'Name of the company that pays your salary', placeholder: 'Select your company', showHelp: true }
+      ]
+    },
+    self: {
+      emoji: '🏪',
+      label: 'Self-employed',
+      title: 'Enter business details',
+      subtitle: 'Tell us about your business so we can finalize your offer.',
+      fields: [
+        { type: 'gst-select', name: 'gstBusiness', label: 'GST Details', helper: 'Select your GST-registered business', defaultValue: 'N S Consultancy' },
+        { type: 'select', name: 'businessSetup', label: 'Business setup type', helper: 'How is your business premises set up?', leadingIcon: '🏢', placeholder: 'Select setup type', defaultValue: 'Rented by other family members' },
+        { type: 'currency', name: 'income', label: 'Monthly business income', helper: 'Average amount your business earns each month', placeholder: 'e.g. 30000', leadingIcon: '💼', showHelp: true }
+      ]
+    },
+    indep: {
+      emoji: '🛵',
+      label: 'Independent professional',
+      title: 'Tell us about your earnings',
+      subtitle: 'A few details so we can finalize your offer.',
+      fields: [
+        { type: 'currency', name: 'income', label: 'Average monthly earnings', helper: 'Total amount you earn across all apps each month', placeholder: 'Enter amount' }
+      ],
+      callout: 'On the next screen, you\'ll select the apps you work with (Swiggy, Zomato, Uber, etc.)'
+    },
+    others: {
+      emoji: '🧑‍💻',
+      label: 'Others',
+      title: 'Tell us about your income',
+      subtitle: 'A few details so we can finalize your offer.',
+      fields: [
+        { type: 'currency', name: 'income', label: 'Average monthly income', helper: 'Roughly how much you earn in a typical month', placeholder: 'Enter amount' },
+        { type: 'text', name: 'sourceOfIncome', label: 'Source of income', helper: 'How do you earn your money? Tell us in a few words', placeholder: 'e.g. Tuitions, domestic work, rentals' }
+      ]
+    }
+  };
+
+  const PLATFORM_LABELS = {
+    swiggy: 'Swiggy', zomato: 'Zomato', uber: 'Uber',
+    ola: 'Ola', uc: 'Urban Company', others: 'Others'
+  };
+
+  const SCREEN_INFO = {
+    '1a': {
+      title: 'Step 1A — Pick employment type',
+      desc: 'Tap any option to select it. The "Proceed" button will activate. The next screen will show different fields based on what you pick.'
+    },
+    '1b': {
+      title: 'Step 1B — Income & details',
+      desc: 'Fields adapt based on employment type. Self-employed shows GST details + business setup + income (matching existing screen). Independent professional sees a callout about the platforms screen coming next.'
+    },
+    '1c': {
+      title: 'Step 1C — Select apps (Independent professional only)',
+      desc: 'Multi-select platforms the user works with. Selecting "Others" reveals a free-text input.'
+    },
+    'done': {
+      title: 'Captured — basic details complete',
+      desc: 'End of Workstream A. All data captured.'
+    }
+  };
+
+  function selectEmp(key) {
+    state.selectedEmployment = key;
+    document.querySelectorAll('#screen-1a .option-card').forEach(card => {
+      card.classList.toggle('selected', card.dataset.emp === key);
+    });
+    document.getElementById('proceed-1a').disabled = false;
+    updateInfoPanel();
+    updateFlowMap();
+  }
+
+  function togglePlatform(key) {
+    if (state.selectedPlatforms.has(key)) {
+      state.selectedPlatforms.delete(key);
+    } else {
+      state.selectedPlatforms.add(key);
+    }
+    const card = document.querySelector(`#screen-1c .platform-card[data-platform="${key}"]`);
+    card.classList.toggle('selected');
+    if (key === 'others') {
+      document.getElementById('other-platform-input').classList.toggle('visible', state.selectedPlatforms.has('others'));
+    }
+    document.getElementById('proceed-1c').disabled = state.selectedPlatforms.size === 0;
+    updateInfoPanel();
+  }
+
+  function canGoTo(screen) {
+    if (screen === '1a') return true;
+    if (screen === '1b') return state.selectedEmployment !== null;
+    if (screen === '1c') return state.selectedEmployment === 'indep';
+    if (screen === 'done') {
+      if (state.selectedEmployment === 'indep') return state.selectedPlatforms.size > 0;
+      return state.selectedEmployment !== null;
+    }
+    return false;
+  }
+
+  function goToScreen(id, isBack) {
+    if (!canGoTo(id) && id !== 'done') return;
+
+    if (state.currentScreen === '1b' && id !== '1b') {
+      captureForm1BValues();
+    }
+
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.remove('active');
+      s.classList.remove('back');
+    });
+    const target = document.getElementById('screen-' + id);
+    target.classList.add('active');
+    if (isBack) {
+      target.classList.add('back');
+      setTimeout(() => target.classList.remove('back'), 300);
+    }
+    state.currentScreen = id;
+
+    if (id === '1b') renderScreen1B();
+    if (id === '1c') renderScreen1C();
+    if (id === 'done') renderDoneSummary();
+
+    updateInfoPanel();
+    updateFlowMap();
+  }
+
+  function captureForm1BValues() {
+    const config = EMPLOYMENT_CONFIG[state.selectedEmployment];
+    if (!config) return;
+    if (!state.formValues[state.selectedEmployment]) state.formValues[state.selectedEmployment] = {};
+    config.fields.forEach(field => {
+      if (field.type === 'gst-select') {
+        // Already captured via defaultValue (read-only card in this prototype)
+        if (!state.formValues[state.selectedEmployment][field.name]) {
+          state.formValues[state.selectedEmployment][field.name] = field.defaultValue || '';
+        }
+      } else {
+        const input = document.querySelector(`#screen-1b [data-field-name="${field.name}"]`);
+        if (input) {
+          state.formValues[state.selectedEmployment][field.name] = input.value;
+        }
+      }
+    });
+  }
+
+  function proceedFrom1B() {
+    captureForm1BValues();
+    if (state.selectedEmployment === 'indep') {
+      goToScreen('1c');
+    } else {
+      goToScreen('done');
+    }
+  }
+
+  function renderScreen1B() {
+    const config = EMPLOYMENT_CONFIG[state.selectedEmployment];
+    if (!config) return;
+
+    document.getElementById('summary-emoji').textContent = config.emoji;
+    document.getElementById('summary-label').textContent = config.label;
+    document.getElementById('screen-1b-title').textContent = config.title;
+    document.getElementById('screen-1b-subtitle').textContent = config.subtitle;
+
+    const container = document.getElementById('dynamic-fields');
+    container.innerHTML = '';
+
+    const savedValues = state.formValues[state.selectedEmployment] || {};
+
+    config.fields.forEach(field => {
+      const fieldGroup = document.createElement('div');
+      fieldGroup.className = 'field-group';
+
+      // Label row
+      const labelRow = document.createElement('div');
+      labelRow.className = 'field-label-row';
+
+      const label = document.createElement('label');
+      label.className = 'field-label';
+      label.textContent = field.label;
+      labelRow.appendChild(label);
+
+      if (field.showHelp) {
+        const helpIcon = document.createElement('span');
+        helpIcon.className = 'help-icon';
+        helpIcon.textContent = '?';
+        helpIcon.title = field.helper;
+        labelRow.appendChild(helpIcon);
+      }
+      fieldGroup.appendChild(labelRow);
+
+      // Helper text
+      if (field.helper && !field.showHelp) {
+        const helper = document.createElement('div');
+        helper.className = 'field-helper';
+        helper.textContent = field.helper;
+        fieldGroup.appendChild(helper);
+      }
+
+      const savedValue = savedValues[field.name] || field.defaultValue || '';
+
+      if (field.type === 'gst-select') {
+        // GST select card with radio + name + chevron (matches existing screen)
+        const card = document.createElement('div');
+        card.className = 'gst-select-card';
+        card.dataset.fieldName = field.name;
+        card.innerHTML = `
+          <div class="gst-radio"></div>
+          <div class="gst-name">${savedValue}</div>
+          <span class="chevron">⌄</span>
+        `;
+        fieldGroup.appendChild(card);
+      } else if (field.type === 'currency') {
+        const wrap = document.createElement('div');
+        wrap.className = 'input-wrap';
+        const icon = document.createElement('span');
+        icon.className = 'input-icon';
+        icon.textContent = field.leadingIcon || '₹';
+        wrap.appendChild(icon);
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = field.leadingIcon ? 'field-input with-leading-icon' : 'field-input with-icon-prefix';
+        input.placeholder = field.placeholder;
+        input.dataset.fieldName = field.name;
+        input.value = savedValue;
+        wrap.appendChild(input);
+        fieldGroup.appendChild(wrap);
+      } else if (field.type === 'select') {
+        const wrap = document.createElement('div');
+        wrap.className = 'select-wrap';
+        if (field.leadingIcon) wrap.classList.add('input-wrap');
+        if (field.leadingIcon) {
+          const leading = document.createElement('span');
+          leading.className = 'input-leading-icon';
+          leading.textContent = field.leadingIcon;
+          wrap.appendChild(leading);
+        }
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = field.leadingIcon ? 'field-input is-select with-leading-icon' : 'field-input is-select';
+        input.placeholder = field.placeholder;
+        input.readOnly = true;
+        input.dataset.fieldName = field.name;
+        input.value = savedValue;
+        wrap.appendChild(input);
+        fieldGroup.appendChild(wrap);
+      } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'field-input';
+        input.placeholder = field.placeholder;
+        input.dataset.fieldName = field.name;
+        input.value = savedValue;
+        fieldGroup.appendChild(input);
+      }
+
+      container.appendChild(fieldGroup);
+    });
+
+    if (config.callout) {
+      const callout = document.createElement('div');
+      callout.className = 'info-callout';
+      callout.innerHTML = `<div class="info-icon">i</div><p><strong>Up next:</strong> ${config.callout}</p>`;
+      container.appendChild(callout);
+    }
+
+    const proceedBtn = document.getElementById('proceed-1b');
+    proceedBtn.textContent = state.selectedEmployment === 'indep' ? 'Continue to apps' : 'Proceed';
+  }
+
+  function renderScreen1C() {
+    document.querySelectorAll('#screen-1c .platform-card').forEach(card => {
+      const key = card.dataset.platform;
+      card.classList.toggle('selected', state.selectedPlatforms.has(key));
+    });
+    document.getElementById('other-platform-input').classList.toggle('visible', state.selectedPlatforms.has('others'));
+    document.getElementById('proceed-1c').disabled = state.selectedPlatforms.size === 0;
+  }
+
+  function renderDoneSummary() {
+    const config = EMPLOYMENT_CONFIG[state.selectedEmployment];
+    const container = document.getElementById('data-summary');
+    const savedValues = state.formValues[state.selectedEmployment] || {};
+
+    let html = '<h4>Captured details</h4>';
+    html += `<div class="data-row"><span class="key">Employment</span><span class="val">${config.emoji} ${config.label}</span></div>`;
+
+    config.fields.forEach(field => {
+      const value = savedValues[field.name] || field.defaultValue;
+      if (value) {
+        const displayValue = field.type === 'currency' ? `₹${value}` : value;
+        html += `<div class="data-row"><span class="key">${field.label}</span><span class="val">${displayValue}</span></div>`;
+      }
+    });
+
+    if (state.selectedEmployment === 'indep' && state.selectedPlatforms.size > 0) {
+      const platforms = Array.from(state.selectedPlatforms).map(k => PLATFORM_LABELS[k]);
+      const otherText = document.getElementById('other-platform-text');
+      if (otherText && otherText.value && state.selectedPlatforms.has('others')) {
+        const otherIdx = platforms.indexOf('Others');
+        if (otherIdx >= 0) platforms[otherIdx] = `Others (${otherText.value})`;
+      }
+      html += `<div class="data-row"><span class="key">Platforms</span><span class="val">${platforms.join(', ')}</span></div>`;
+    }
+
+    container.innerHTML = html;
+  }
+
+  function updateInfoPanel() {
+    document.getElementById('current-screen-readout').textContent = 'Screen ' + state.currentScreen.toUpperCase();
+
+    const empReadout = document.getElementById('emp-readout');
+    if (state.selectedEmployment) {
+      const c = EMPLOYMENT_CONFIG[state.selectedEmployment];
+      empReadout.textContent = `${c.emoji} ${c.label}`;
+      empReadout.classList.remove('empty');
+    } else {
+      empReadout.textContent = 'None yet';
+      empReadout.classList.add('empty');
+    }
+
+    const platReadout = document.getElementById('plat-readout');
+    if (state.selectedPlatforms.size > 0) {
+      const labels = Array.from(state.selectedPlatforms).map(k => PLATFORM_LABELS[k]);
+      platReadout.textContent = labels.join(', ');
+      platReadout.classList.remove('empty');
+    } else {
+      platReadout.textContent = '—';
+      platReadout.classList.add('empty');
+    }
+
+    const info = SCREEN_INFO[state.currentScreen];
+    if (info) {
+      document.getElementById('step-title').textContent = info.title;
+      document.getElementById('step-desc').textContent = info.desc;
+    }
+  }
+
+  function updateFlowMap() {
+    document.querySelectorAll('.flow-item').forEach(f => f.classList.remove('active'));
+    const active = document.querySelector(`.flow-item[data-screen="${state.currentScreen}"]`);
+    if (active) active.classList.add('active');
+
+    const flow1c = document.getElementById('flow-1c');
+    const flowArrow1c = document.getElementById('flow-arrow-1c');
+    if (state.selectedEmployment === 'indep') {
+      flow1c.classList.remove('disabled');
+      flowArrow1c.textContent = '↓ if Independent professional';
+      flowArrow1c.style.color = 'var(--brand-orange)';
+    } else if (state.selectedEmployment) {
+      flow1c.classList.add('disabled');
+      flowArrow1c.textContent = '↓ skips 1C for ' + EMPLOYMENT_CONFIG[state.selectedEmployment].label;
+      flowArrow1c.style.color = '#666';
+    } else {
+      flow1c.classList.add('disabled');
+    }
+  }
+
+  function resetFlow() {
+    state.selectedEmployment = null;
+    state.selectedPlatforms = new Set();
+    state.formValues = {};
+    state.currentScreen = '1a';
+
+    document.querySelectorAll('#screen-1a .option-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#screen-1c .platform-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('proceed-1a').disabled = true;
+    document.getElementById('proceed-1c').disabled = true;
+    document.getElementById('other-platform-input').classList.remove('visible');
+    const otherText = document.getElementById('other-platform-text');
+    if (otherText) otherText.value = '';
+
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-1a').classList.add('active');
+
+    updateInfoPanel();
+    updateFlowMap();
+  }
+
+  updateInfoPanel();
+  updateFlowMap();
+</script>
+
+</body>
+</html>
