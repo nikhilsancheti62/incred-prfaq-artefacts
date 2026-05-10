@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InCred PL · Banking Flow — Complete Working Prototype</title>
+<title>InCred PL · Dual Banking Prototype — Risk Policy Walkthrough</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -639,6 +639,64 @@
     line-height: 1.5;
   }
 
+  /* Verify bank details form (B5b — penny drop step 2) */
+  .auto-debit-card {
+    background: #F5F0FF; border-radius: var(--r-md);
+    padding: 14px 16px; margin-bottom: 18px;
+  }
+  .auto-debit-card .auto-debit-line1 {
+    font-size: 13px; color: var(--text-primary);
+    margin-bottom: 10px; font-weight: 600;
+  }
+  .auto-debit-card .auto-debit-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .auto-debit-card .auto-debit-row:last-child { margin-bottom: 0; }
+  .auto-debit-card .auto-debit-icon {
+    width: 22px; height: 22px; flex-shrink: 0;
+    border-radius: 50%; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    color: #7F77DD; font-size: 12px; font-weight: 800;
+    border: 1px solid rgba(127, 119, 221, 0.3);
+  }
+  .auto-debit-card .auto-debit-text {
+    font-size: 13px; color: var(--text-primary);
+  }
+  .form-field-label {
+    font-size: 13px; font-weight: 700;
+    color: var(--text-primary);
+    margin: 14px 0 6px;
+  }
+  .form-field-input {
+    width: 100%; padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    font-size: 14px; font-family: inherit;
+    color: var(--text-primary);
+    background: #fff;
+    box-sizing: border-box;
+  }
+  .form-field-input::placeholder { color: #BBB; }
+  .form-field-select {
+    position: relative;
+  }
+  .form-field-select::after {
+    content: '⌄'; position: absolute;
+    right: 14px; top: 50%; transform: translateY(-65%);
+    font-size: 18px; color: var(--brand-orange);
+    pointer-events: none;
+  }
+  .form-note {
+    margin-top: auto;
+    background: #FFF6EE;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+  .form-note strong { font-weight: 800; }
+
   /* Sidebar */
   .info-panel {
     width: 380px;
@@ -773,18 +831,67 @@
     letter-spacing: 0.5px;
   }
   .reset-btn:hover { color: #fff; border-color: #666; }
+
+  /* === Additions for dual banking prototype === */
+  .path-pill {
+    display: inline-block; padding: 4px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.3px;
+    background: var(--brand-orange); color: #fff;
+  }
+  .path-pill.p1 { background: var(--success); }
+  .path-pill.p2 { background: var(--brand-orange); }
+  .path-pill.p3 { background: var(--danger); }
+  .path-pill.p4 { background: var(--brand-orange); }
+  .path-pill.p5 { background: #C04828; }
+  .path-pill.none { background: var(--text-secondary); }
+
+  .cascade-indicator {
+    margin-top: 12px; padding: 10px 12px; border-radius: 8px;
+    background: rgba(238, 123, 34, 0.08);
+    border-left: 3px solid var(--brand-orange);
+    font-size: 12px; line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .cascade-indicator strong { color: var(--text-primary); }
+
+  .toggle-row.toggle-row-5 { flex-wrap: wrap; gap: 6px; }
+  .toggle-row.toggle-row-5 .toggle-btn { flex: 1 1 calc(33.33% - 4px); min-width: 110px; }
+
+  .info-banner {
+    margin: 12px 0 0; padding: 10px 12px;
+    background: rgba(29, 158, 117, 0.08);
+    border-left: 3px solid var(--success);
+    border-radius: 6px;
+    font-size: 12px; line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  .controls-section-heading {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--text-secondary);
+    margin: 18px 0 8px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .controls-section-heading:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+  .back-to-prfaq {
+    display: block; margin-top: 24px; padding: 10px 14px;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 13px; font-weight: 700;
+    color: var(--text-secondary); text-decoration: none; text-align: center;
+    transition: all 0.15s ease;
+  }
+  .back-to-prfaq:hover { color: var(--brand-orange); border-color: var(--brand-orange); }
 </style>
 </head>
 <body>
 
 <div class="stage">
 
-  <!-- ===================================== -->
-  <!-- PHONE -->
-  <!-- ===================================== -->
+  <!-- ============== PHONE ============== -->
   <div class="phone">
 
-    <!-- B1: Verify income mode picker -->
+    <!-- ===== B1: Verify income mode picker (1st attempt) ===== -->
     <div class="screen active" id="screen-b1">
       <div class="status-bar">
         <span>12:30</span>
@@ -800,34 +907,31 @@
       </div>
       <div class="phone-body">
         <h3 class="screen-title">Verify your income</h3>
-        <p class="screen-subtitle">Please pick the account where your salary is regularly credited.</p>
+        <p class="screen-subtitle">We need a bank statement showing your salary credits.</p>
 
         <div class="section-label">Please select your preferred mode:</div>
 
-        <div class="option-card selected" data-mode="otp" onclick="selectMode('otp')">
+        <div class="option-card selected" data-mode="otp" onclick="selectMode1('otp')">
           <div class="radio"></div>
           <div class="text-wrap">
-            <div class="label">
-              OTP based consent
-              <span class="badge badge-recommended">Recommended</span>
-            </div>
+            <div class="label">OTP based consent <span class="badge badge-recommended">Recommended</span></div>
             <div class="hint">Provide your bank statement via OTP</div>
           </div>
         </div>
 
-        <div class="option-card" data-mode="netbanking" onclick="selectMode('netbanking')">
+        <div class="option-card" data-mode="netbanking" onclick="selectMode1('netbanking')">
           <div class="radio"></div>
           <div class="text-wrap">
             <div class="label">Net banking</div>
-            <div class="hint">Keep your user name and password handy</div>
+            <div class="hint">Keep your username and password handy</div>
           </div>
         </div>
 
-        <div class="option-card" data-mode="pdf" onclick="selectMode('pdf')">
+        <div class="option-card" data-mode="pdf" onclick="selectMode1('pdf')">
           <div class="radio"></div>
           <div class="text-wrap">
             <div class="label">Bank statement upload</div>
-            <div class="hint">Use only if the above don't work · Jul 2023 to Dec 2023</div>
+            <div class="hint">Use only if the above don't work · last 6 months</div>
           </div>
         </div>
       </div>
@@ -836,61 +940,8 @@
       </div>
     </div>
 
-    <!-- B2: Statement processing -->
-    <div class="screen" id="screen-b2">
-      <div class="status-bar">
-        <span>12:30</span>
-        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
-      </div>
-      <div class="app-header">
-        <h2>InCred Personal Loan</h2>
-      </div>
-      <div class="brand-row" style="padding-top: 0;">
-        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
-        <a class="help-link">Help?</a>
-      </div>
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
-        <div class="otp-modal">
-          <div class="loader"></div>
-          <h3>Verifying your statement</h3>
-          <p>Please wait while we securely fetch your bank statement and check your income.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- B3: Hard decline (Sc 1, Sc 2b cap reached, Sc 4 dead-end) -->
-    <div class="screen" id="screen-b3">
-      <div class="status-bar">
-        <span>12:30</span>
-        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
-      </div>
-      <div class="brand-row">
-        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
-        <a class="help-link">Help?</a>
-      </div>
-      <div class="phone-body">
-        <div class="hero-icon-wrap orange">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#EE7B22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-        </div>
-        <div class="hero-title">We can't approve this loan today</div>
-        <div class="hero-sub">Based on the information you've shared, we're unable to offer you a loan right now. <strong style="color:var(--text-primary)">This isn't a credit decision</strong> — it just means our current product doesn't fit your profile.</div>
-
-        <div class="tip-card" style="margin-top: 8px;">
-          <div class="tip-icon">i</div>
-          <p>Your details are safe with us. We're working on more products and will let you know when something fits.</p>
-        </div>
-      </div>
-      <div class="cta-container">
-        <button class="btn btn-primary" onclick="resetFlow()">Done</button>
-      </div>
-    </div>
-
-    <!-- B4: Soft recovery -->
-    <div class="screen" id="screen-b4">
+    <!-- ===== B1a: Bank picker (1st attempt) ===== -->
+    <div class="screen" id="screen-b1a">
       <div class="status-bar">
         <span>12:30</span>
         <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
@@ -904,50 +955,211 @@
         <a class="help-link">Help?</a>
       </div>
       <div class="phone-body">
-        <div class="hero-icon-wrap orange">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#EE7B22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        <h3 class="screen-title">Choose your bank</h3>
+        <p class="screen-subtitle">Select the bank where your salary is credited.</p>
+
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search by bank name">
+        </div>
+
+        <div class="section-label">Popular banks</div>
+        <div class="popular-banks-grid">
+          <div class="popular-bank-card" data-bank="HDFC" onclick="selectBank1(this, 'HDFC')">
+            <div class="bank-logo hdfc">H</div>
+            <div class="name">HDFC Bank</div>
+          </div>
+          <div class="popular-bank-card" data-bank="ICICI" onclick="selectBank1(this, 'ICICI')">
+            <div class="bank-logo icici">I</div>
+            <div class="name">ICICI Bank</div>
+          </div>
+          <div class="popular-bank-card" data-bank="SBI" onclick="selectBank1(this, 'SBI')">
+            <div class="bank-logo sbi">S</div>
+            <div class="name">State Bank of India</div>
+          </div>
+          <div class="popular-bank-card" data-bank="Axis" onclick="selectBank1(this, 'Axis')">
+            <div class="bank-logo axis">A</div>
+            <div class="name">Axis Bank</div>
+          </div>
+          <div class="popular-bank-card" data-bank="Kotak" onclick="selectBank1(this, 'Kotak')">
+            <div class="bank-logo kotak">K</div>
+            <div class="name">Kotak Mahindra</div>
+          </div>
+          <div class="popular-bank-card" data-bank="Union" onclick="selectBank1(this, 'Union')">
+            <div class="bank-logo union">U</div>
+            <div class="name">Union Bank</div>
+          </div>
+        </div>
+
+        <div class="section-label">All supported banks</div>
+        <div class="all-banks-list">
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">AU Small Finance Bank</div></div>
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">Bank of Baroda</div></div>
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">Canara Bank</div></div>
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">IDFC FIRST Bank</div></div>
+        </div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" id="b1a-proceed" disabled onclick="proceedFromB1a()">Proceed</button>
+      </div>
+    </div>
+
+    <!-- ===== B2: Processing animation ===== -->
+    <div class="screen" id="screen-b2">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="processing-spinner"></div>
+        <h3 class="screen-title" style="text-align: center; margin-top: 24px;">Reviewing your statement</h3>
+        <p class="screen-subtitle" style="text-align: center;">This usually takes a few seconds. Please don't close the app.</p>
+      </div>
+    </div>
+
+    <!-- ===== B3: Standard credit reject (hard reject + "no other account" leaves) ===== -->
+    <div class="screen" id="screen-b3">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <div class="hero-icon-wrap" style="margin-top: 32px; background: #FFEBEE;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M15 9l-6 6"/>
+            <path d="M9 9l6 6"/>
           </svg>
         </div>
-        <div class="hero-title">We couldn't find your salary</div>
-        <div class="hero-sub">We received your statement but couldn't clearly identify your salary. Help us understand:</div>
+        <div class="hero-title">We can't approve this loan today</div>
+        <div class="hero-sub">This isn't a credit decision — our current product doesn't fit your profile right now. We'll reach out when something better suits you.</div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" onclick="resetFlow()">Done</button>
+      </div>
+    </div>
 
-        <div class="recovery-cta-card">
-          <h4>Do you have another bank account where your salary lands?</h4>
-          <p>Adding it will help us approve your loan. Takes less than 2 minutes.</p>
-          <p style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.06); font-size: 12px; color: #6B6B68;">When you log in next, please pick a different account — the one you used earlier had no salary credits.</p>
+    <!-- ===== B4-2: Quick check on salary (Path 2 — 3 options) ===== -->
+    <div class="screen" id="screen-b4-2">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title" style="margin-top: 16px;">Quick check on your salary</h3>
+        <p class="screen-subtitle">We've reviewed your statement. To finish, please tell us where your salary is credited.</p>
+
+        <div class="option-card" data-opt="2a" onclick="selectOption2(this, '2a')">
+          <div class="radio"></div>
+          <div class="text-wrap">
+            <div class="label">Salary lands in this account</div>
+            <div class="hint">We'll do a final review and confirm</div>
+          </div>
         </div>
 
-        <div class="reassurance-list">
-          <div class="reassurance-item">
-            <div class="reassurance-check">✓</div>
-            <span>Your existing offer is still valid</span>
+        <div class="option-card" data-opt="2b" onclick="selectOption2(this, '2b')">
+          <div class="radio"></div>
+          <div class="text-wrap">
+            <div class="label">Salary lands in a different account</div>
+            <div class="hint">We'll ask you to add that account next</div>
           </div>
-          <div class="reassurance-item">
-            <div class="reassurance-check">✓</div>
-            <span>No additional bureau check needed</span>
-          </div>
-          <div class="reassurance-item">
-            <div class="reassurance-check">✓</div>
-            <span>Your data stays completely secure</span>
+        </div>
+
+        <div class="option-card" data-opt="2c" onclick="selectOption2(this, '2c')">
+          <div class="radio"></div>
+          <div class="text-wrap">
+            <div class="label">I receive my salary in cash</div>
+            <div class="hint">We'll review your statement for cash deposits</div>
           </div>
         </div>
       </div>
       <div class="cta-container">
-        <button class="btn btn-primary" style="margin-bottom: 10px;" onclick="goToScreen('b4b')">Yes, add another account</button>
-        <button class="btn btn-text" onclick="goToScreen('b3')">I don't have another account</button>
+        <button class="btn btn-primary" id="b4-2-proceed" disabled onclick="proceedFromB4_2()">Proceed</button>
       </div>
     </div>
 
-    <!-- B4b: Verify income for 2nd account -->
+    <!-- ===== B4-4: Recovery offer for Path 4 — banking quality rescue ===== -->
+    <div class="screen" id="screen-b4-4">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title" style="margin-top: 16px;">One more thing before we proceed</h3>
+        <p class="screen-subtitle">Based on this account, we couldn't approve your loan right now — but we may still be able to help.</p>
+
+        <div class="recovery-cta-card">
+          <h4>Do you have another bank account that you use for daily transactions?</h4>
+          <p>A healthier account where you regularly receive money or make payments can help us approve your loan.</p>
+        </div>
+
+        <div class="reassurance-list">
+          <div class="reassurance-item"><div class="reassurance-check">✓</div><span>No additional credit check needed</span></div>
+          <div class="reassurance-item"><div class="reassurance-check">✓</div><span>Takes less than 2 minutes</span></div>
+          <div class="reassurance-item"><div class="reassurance-check">✓</div><span>Your data stays completely secure</span></div>
+        </div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" style="margin-bottom: 10px;" onclick="pickRecoveryOption('4a')">Yes, add another account</button>
+        <button class="btn btn-text" onclick="pickRecoveryOption('4_none')" style="color: var(--text-secondary);">I don't have another account</button>
+      </div>
+    </div>
+
+    <!-- ===== B4-5: Recovery offer for Path 5 — salary search ===== -->
+    <div class="screen" id="screen-b4-5">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title" style="margin-top: 16px;">One more thing before we proceed</h3>
+        <p class="screen-subtitle">Based on this account, we couldn't approve your loan right now — but we may still be able to help.</p>
+
+        <div class="recovery-cta-card">
+          <h4>Where does your salary land?</h4>
+          <p>If your salary is credited to a different bank account, please add it. We'll review and try again.</p>
+        </div>
+
+        <div class="reassurance-list">
+          <div class="reassurance-item"><div class="reassurance-check">✓</div><span>No additional credit check needed</span></div>
+          <div class="reassurance-item"><div class="reassurance-check">✓</div><span>Takes less than 2 minutes</span></div>
+          <div class="reassurance-item"><div class="reassurance-check">✓</div><span>Your data stays completely secure</span></div>
+        </div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" style="margin-bottom: 10px;" onclick="pickRecoveryOption('5a')">Yes, my salary is in another account</button>
+        <button class="btn btn-text" onclick="pickRecoveryOption('5_none')" style="color: var(--text-secondary);">I don't have another account</button>
+      </div>
+    </div>
+
+    <!-- ===== B4b: Verify income mode picker (2nd attempt) ===== -->
     <div class="screen" id="screen-b4b">
       <div class="status-bar">
         <span>12:30</span>
         <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
       </div>
       <div class="app-header">
-        <button class="back-btn" onclick="goToScreen('b4')">‹</button>
+        <button class="back-btn" onclick="goBackFromB4b()">‹</button>
         <h2>InCred Personal Loan</h2>
       </div>
       <div class="brand-row" style="padding-top: 0;">
@@ -955,40 +1167,37 @@
         <a class="help-link">Help?</a>
       </div>
       <div class="phone-body">
-        <h3 class="screen-title">Verify your income</h3>
-        <p class="screen-subtitle">Please pick the account where your salary is regularly credited.</p>
+        <h3 class="screen-title">Add your second account</h3>
+        <p class="screen-subtitle" id="b4b-subtitle">Pick the account where your salary is regularly credited.</p>
 
         <div class="prev-failure" style="margin-top: 4px;">
           <div class="icon">!</div>
-          <div class="txt">The account you submitted earlier (<strong>HDFC ••••4523</strong>) had no salary. Please pick a <strong>different account</strong> when you're sent to your bank or AA.</div>
+          <div class="txt" id="b4b-prev-pill">The account you submitted earlier (<strong>HDFC ••••4523</strong>) — could not detect salary. Please pick a different account.</div>
         </div>
 
         <div class="section-label" style="margin-top: 18px;">Please select your preferred mode:</div>
 
-        <div class="option-card selected" data-mode="otp" onclick="selectVerifyMode(this, 'otp')">
+        <div class="option-card selected" data-mode="otp" onclick="selectMode2(this, 'otp')">
           <div class="radio"></div>
           <div class="text-wrap">
-            <div class="label">
-              OTP based consent
-              <span class="badge badge-recommended">Recommended</span>
-            </div>
+            <div class="label">OTP based consent <span class="badge badge-recommended">Recommended</span></div>
             <div class="hint">Provide your bank statement via OTP</div>
           </div>
         </div>
 
-        <div class="option-card" data-mode="netbanking" onclick="selectVerifyMode(this, 'netbanking')">
+        <div class="option-card" data-mode="netbanking" onclick="selectMode2(this, 'netbanking')">
           <div class="radio"></div>
           <div class="text-wrap">
             <div class="label">Net banking</div>
-            <div class="hint">Keep your user name and password handy</div>
+            <div class="hint">Keep your username and password handy</div>
           </div>
         </div>
 
-        <div class="option-card" data-mode="pdf" onclick="selectVerifyMode(this, 'pdf')">
+        <div class="option-card" data-mode="pdf" onclick="selectMode2(this, 'pdf')">
           <div class="radio"></div>
           <div class="text-wrap">
             <div class="label">Bank statement upload</div>
-            <div class="hint">Use only if the above don't work · Jul 2023 to Dec 2023</div>
+            <div class="hint">Use only if the above don't work · last 6 months</div>
           </div>
         </div>
       </div>
@@ -997,7 +1206,76 @@
       </div>
     </div>
 
-    <!-- B4c: Same account detected (NEW) -->
+    <!-- ===== B1b: Bank picker (2nd attempt) ===== -->
+    <div class="screen" id="screen-b1b">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="app-header">
+        <button class="back-btn" onclick="goToScreen('b4b')">‹</button>
+        <h2>InCred Personal Loan</h2>
+      </div>
+      <div class="brand-row" style="padding-top: 0;">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <h3 class="screen-title">Choose your bank</h3>
+        <p class="screen-subtitle" id="b1b-subtitle">Select the bank where your salary is credited.</p>
+
+        <div class="prev-failure" style="margin-top: 4px;">
+          <div class="icon">!</div>
+          <div class="txt" id="b1b-prev-pill">Previously tried: <strong>HDFC ••••4523</strong> — could not detect salary. Pick a different account.</div>
+        </div>
+
+        <div class="search-bar" style="margin-top: 16px;">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search by bank name">
+        </div>
+
+        <div class="section-label">Popular banks</div>
+        <div class="popular-banks-grid">
+          <div class="popular-bank-card" data-bank="HDFC" onclick="selectBank2(this, 'HDFC')">
+            <div class="bank-logo hdfc">H</div>
+            <div class="name">HDFC Bank</div>
+          </div>
+          <div class="popular-bank-card" data-bank="ICICI" onclick="selectBank2(this, 'ICICI')">
+            <div class="bank-logo icici">I</div>
+            <div class="name">ICICI Bank</div>
+          </div>
+          <div class="popular-bank-card" data-bank="SBI" onclick="selectBank2(this, 'SBI')">
+            <div class="bank-logo sbi">S</div>
+            <div class="name">State Bank of India</div>
+          </div>
+          <div class="popular-bank-card" data-bank="Axis" onclick="selectBank2(this, 'Axis')">
+            <div class="bank-logo axis">A</div>
+            <div class="name">Axis Bank</div>
+          </div>
+          <div class="popular-bank-card" data-bank="Kotak" onclick="selectBank2(this, 'Kotak')">
+            <div class="bank-logo kotak">K</div>
+            <div class="name">Kotak Mahindra</div>
+          </div>
+          <div class="popular-bank-card" data-bank="Union" onclick="selectBank2(this, 'Union')">
+            <div class="bank-logo union">U</div>
+            <div class="name">Union Bank</div>
+          </div>
+        </div>
+
+        <div class="section-label">All supported banks</div>
+        <div class="all-banks-list">
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">AU Small Finance Bank</div></div>
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">Bank of Baroda</div></div>
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">Canara Bank</div></div>
+          <div class="all-bank-row"><div class="small-icon">🏦</div><div class="name">IDFC FIRST Bank</div></div>
+        </div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" id="b1b-proceed" disabled onclick="proceedFromB1b()">Proceed</button>
+      </div>
+    </div>
+
+    <!-- ===== B4c: Same account detected (Layer 2 duplicate defense) ===== -->
     <div class="screen" id="screen-b4c">
       <div class="status-bar">
         <span>12:30</span>
@@ -1017,7 +1295,6 @@
         </div>
         <div class="hero-title" id="b4c-title">Looks like the same account</div>
         <div class="hero-sub" id="b4c-body">Your bank returned the account <strong>HDFC ••••4523</strong>, which we already checked. To verify your salary, please choose a different account.</div>
-
         <div class="tip-card" style="margin-top: 4px;">
           <div class="tip-icon">i</div>
           <p id="b4c-tip">If you have a salary account at the same bank, it'll have a different account number. Pick the same bank again and select that one when prompted.</p>
@@ -1025,139 +1302,11 @@
       </div>
       <div class="cta-container">
         <button class="btn btn-primary" style="margin-bottom: 10px;" onclick="goToScreen('b4b')">Choose a different account</button>
-        <button class="btn btn-text" onclick="goToScreen('b3')">I don't have another account</button>
+        <button class="btn btn-text" onclick="onNoOtherAccount()">I don't have another account</button>
       </div>
     </div>
 
-    <!-- B6: "Are you sure?" — Sc 4 -->
-    <div class="screen" id="screen-b6">
-      <div class="status-bar">
-        <span>12:30</span>
-        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
-      </div>
-      <div class="app-header">
-        <button class="back-btn">‹</button>
-        <h2>InCred Personal Loan</h2>
-      </div>
-      <div class="brand-row" style="padding-top: 0;">
-        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
-        <a class="help-link">Help?</a>
-      </div>
-      <div class="phone-body">
-        <h3 class="screen-title">Quick check on your salary</h3>
-        <p class="screen-subtitle">We received your statement but couldn't clearly identify your salary. Help us understand:</p>
-
-        <div class="option-card with-emoji" data-sure="yes" onclick="selectSureOption('yes')">
-          <div class="emoji-icon">💰</div>
-          <div class="text-wrap">
-            <div class="label">Yes, my salary is credited to this account</div>
-            <div class="hint">It might just need extra verification</div>
-          </div>
-        </div>
-
-        <div class="option-card with-emoji" data-sure="no" id="sure-no-option" onclick="selectSureOption('no')">
-          <div class="emoji-icon">🏦</div>
-          <div class="text-wrap">
-            <div class="label">No, my salary lands in a different account</div>
-            <div class="hint">You can share another bank account</div>
-          </div>
-        </div>
-
-        <div class="option-card with-emoji" data-sure="cash" onclick="selectSureOption('cash')">
-          <div class="emoji-icon">💵</div>
-          <div class="text-wrap">
-            <div class="label">I receive my salary in cash</div>
-            <div class="hint">We'll capture this for the right product</div>
-          </div>
-        </div>
-      </div>
-      <div class="cta-container">
-        <button class="btn btn-primary" id="b6-proceed" disabled onclick="proceedFromB6()">Proceed</button>
-      </div>
-    </div>
-
-    <!-- B7: Application under review (Sc 4 + "Yes") -->
-    <div class="screen" id="screen-b7">
-      <div class="status-bar">
-        <span>12:30</span>
-        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
-      </div>
-      <div class="app-header">
-        <h2>Application status</h2>
-      </div>
-      <div class="brand-row" style="padding-top: 0;">
-        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
-        <a class="help-link">Help?</a>
-      </div>
-      <div class="phone-body">
-        <div class="status-pill">
-          <span class="dot"></span> Under review
-        </div>
-        <h3 class="screen-title">We're verifying your salary</h3>
-        <p class="screen-subtitle">Our team is reviewing your bank statement. This usually takes 2-4 hours. We'll notify you as soon as there's an update.</p>
-
-        <div class="section-label" style="margin-top: 8px; margin-bottom: 4px;">What's happening</div>
-        <div class="timeline">
-          <div class="step done">
-            <div class="title">Application submitted</div>
-            <div class="sub">Just now</div>
-          </div>
-          <div class="step done">
-            <div class="title">Bank statement received</div>
-            <div class="sub">Processed via OTP based consent</div>
-          </div>
-          <div class="step active">
-            <div class="title">Salary verification in progress</div>
-            <div class="sub">Our team is reviewing your statement</div>
-          </div>
-          <div class="step">
-            <div class="title">Final offer</div>
-            <div class="sub">Once salary is verified</div>
-          </div>
-        </div>
-
-        <div class="tip-card" style="margin-top: 18px;">
-          <div class="tip-icon">i</div>
-          <p>You can close the app — we'll notify you via SMS and push when there's an update.</p>
-        </div>
-      </div>
-      <div class="cta-container">
-        <button class="btn btn-primary" onclick="resetFlow()">Done</button>
-      </div>
-    </div>
-
-    <!-- B9: Cash salary path -->
-    <div class="screen" id="screen-b9">
-      <div class="status-bar">
-        <span>12:30</span>
-        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
-      </div>
-      <div class="brand-row">
-        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
-        <a class="help-link">Help?</a>
-      </div>
-      <div class="phone-body">
-        <div class="hero-icon-wrap blue" style="margin-top: 24px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4F9BC1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="6" width="20" height="12" rx="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M6 12h.01M18 12h.01"/>
-          </svg>
-        </div>
-        <div class="hero-title">Got it — you receive cash salary</div>
-        <div class="hero-sub">We're working on a product for cash-salary customers. We'll notify you when it launches.</div>
-
-        <div class="tip-card">
-          <div class="tip-icon">i</div>
-          <p>Your details are safe with us. You'll be among the first to know when something fits your profile.</p>
-        </div>
-      </div>
-      <div class="cta-container">
-        <button class="btn btn-primary" onclick="resetFlow()">Done</button>
-      </div>
-    </div>
-
-    <!-- B5: Penny drop / offer (existing pattern from screenshot) -->
+    <!-- ===== B5: Welcome / offer hold (post-approval) ===== -->
     <div class="screen" id="screen-b5">
       <div class="status-bar">
         <span>12:30</span>
@@ -1168,414 +1317,648 @@
         <a class="help-link">Help?</a>
       </div>
       <div class="phone-body">
-        <h3 class="screen-title" style="margin-bottom: 16px;">Hey Ambu, welcome back!</h3>
+        <h3 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin: 8px 0 14px;">Hey Nikhil, welcome back!</h3>
 
         <div class="offer-card">
           <div class="offer-row">
             <div class="offer-emoji">💰</div>
             <div class="offer-text">
               <div class="offer-label">Unlock your personal loan of</div>
-              <div class="offer-amount">₹5,25,000<sup>*</sup></div>
+              <div class="offer-amount" id="offer-amount-display">₹4,50,000<sup>*</sup></div>
             </div>
           </div>
-
           <div class="verify-bank-card">
             <h4>Verify bank details</h4>
             <p>Enter the account where you'd like to receive your money</p>
           </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 4px;" onclick="goToScreen('b5b')">Continue now</button>
+          <button class="btn btn-text" style="width: 100%; margin-top: 6px; text-decoration: underline;">View other steps</button>
+        </div>
+        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">*Offer is subject to KYC approval</p>
 
-          <button class="btn btn-primary" style="margin-bottom: 8px;" onclick="alert('In production, this would route to bank account collection for penny drop verification.')">Continue now</button>
-          <div style="text-align: center;">
-            <a class="help-link" style="font-size: 13px; text-decoration: underline; color: var(--text-secondary);">View other steps</a>
+        <div class="info-banner" id="offer-account-banner" style="margin-top: 14px;">Salary account verified · disbursal and repayment will use this account</div>
+      </div>
+    </div>
+
+    <!-- ===== B5b: Verify bank details form (penny drop step 2) ===== -->
+    <div class="screen" id="screen-b5b">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body" style="display: flex; flex-direction: column;">
+        <h3 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin: 8px 0 14px;">Verify bank details</h3>
+
+        <div class="auto-debit-card">
+          <div class="auto-debit-line1">This bank a/c will be used to</div>
+          <div class="auto-debit-row">
+            <div class="auto-debit-icon">⟳</div>
+            <div class="auto-debit-text">Set up EMI auto-debit</div>
+          </div>
+          <div class="auto-debit-row">
+            <div class="auto-debit-icon">₹</div>
+            <div class="auto-debit-text">Receive your money</div>
           </div>
         </div>
 
-        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 12px; padding-left: 8px;">*Offer is subject to KYC approval</p>
+        <div class="form-field-label">Bank Name</div>
+        <div class="form-field-select">
+          <input type="text" class="form-field-input" placeholder="e.g. Kotak Mahindra" id="b5b-bank">
+        </div>
+
+        <div class="form-field-label">Account number</div>
+        <input type="text" class="form-field-input" placeholder="e.g. 0123456789012345" id="b5b-acc">
+
+        <div class="form-field-label">IFSC Code</div>
+        <input type="text" class="form-field-input" placeholder="e.g. SBI0123456" id="b5b-ifsc">
+
+        <div style="flex: 1;"></div>
+
+        <div class="form-note" style="margin: 18px -16px 0;">
+          <strong>Note:</strong> Please ensure the account belongs to Nikhil
+        </div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" id="b5b-verify" disabled onclick="resetFlow()">Verify account</button>
+      </div>
+    </div>
+
+    <!-- ===== B6: Application under review (silent CPA) ===== -->
+    <div class="screen" id="screen-b6">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <div class="hero-icon-wrap" style="margin-top: 32px; background: #E6F0FA;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3B7BC4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+          </svg>
+        </div>
+        <div class="hero-title">Application under review</div>
+        <div class="hero-sub">Our team is reviewing your statement. This usually takes 2–4 hours. We'll notify you on WhatsApp and SMS as soon as we have an update.</div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" onclick="resetFlow()">Got it</button>
+      </div>
+    </div>
+
+    <!-- ===== B9: Cash salary hold ===== -->
+    <div class="screen" id="screen-b9">
+      <div class="status-bar">
+        <span>12:30</span>
+        <div class="icons"><span>▲</span><span>▼</span><span style="margin-left:4px;">50%</span><span class="battery"></span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand"><span class="incred">InCred!</span><span class="finance">finance</span></div>
+        <a class="help-link">Help?</a>
+      </div>
+      <div class="phone-body">
+        <div class="hero-icon-wrap" style="margin-top: 32px; background: #F5EAFB;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v4"/>
+            <path d="M12 18v4"/>
+            <path d="M4.93 4.93l2.83 2.83"/>
+            <path d="M16.24 16.24l2.83 2.83"/>
+            <path d="M2 12h4"/>
+            <path d="M18 12h4"/>
+            <path d="M4.93 19.07l2.83-2.83"/>
+            <path d="M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </div>
+        <div class="hero-title">Thanks for telling us</div>
+        <div class="hero-sub">We're working on a product designed for customers who receive salary in cash. We'll notify you on WhatsApp as soon as it launches.</div>
+      </div>
+      <div class="cta-container">
+        <button class="btn btn-primary" onclick="resetFlow()">Got it</button>
       </div>
     </div>
 
   </div>
+  <!-- ============== END PHONE ============== -->
 
-  <!-- ===================================== -->
-  <!-- INFO PANEL -->
-  <!-- ===================================== -->
-  <aside class="info-panel">
-    <h1>Banking flow — Complete prototype v2</h1>
-    <p class="subtitle">All 4 scenarios wired plus duplicate-submission defense. Layer 1 lives on B4 / B4b (we control these). Layer 2 catches duplicates after AA / Net banking returns data, since those screens are third-party. PDF gets front-loaded hash + period checks. Use demo controls to simulate each path.</p>
+  <!-- ============== INFO PANEL ============== -->
+  <div class="info-panel">
+    <h1>Dual Banking · Risk Policy Walkthrough</h1>
+    <p class="subtitle">All 5 paths from the swimlane wired end-to-end. Use the demo controls to simulate each cascade. Built for the risk policy meeting.</p>
 
     <div class="demo-controls">
-      <h3>⚡ Demo controls</h3>
-      <div class="control-label">1st statement outcome:</div>
-      <div class="toggle-row" id="toggle-row-sim1">
-        <button class="toggle-btn" onclick="setSim1('reject_det')">
-          Sc 1 — Model rejected, salary detected
-          <span class="desc">→ Hard decline (no recovery)</span>
-        </button>
-        <button class="toggle-btn active" onclick="setSim1('reject_no_det')">
-          Sc 2 — Model rejected, salary not detected
-          <span class="desc">→ Soft recovery, ask for 2nd statement</span>
-        </button>
-        <button class="toggle-btn" onclick="setSim1('approve_det')">
-          Sc 3 — Model approved, salary detected
-          <span class="desc">→ Straight through to penny drop / offer</span>
-        </button>
-        <button class="toggle-btn" onclick="setSim1('approve_no_det')">
-          Sc 4 — Model approved, salary not detected
-          <span class="desc">→ "Are you sure?" with 3 options</span>
-        </button>
+      <h3>Demo Controls</h3>
+
+      <div class="controls-section-heading">1st statement · banking model verdict</div>
+      <div class="toggle-row toggle-row-5" id="toggle-row-path">
+        <button class="toggle-btn active" onclick="setPath('p1')">P1 · Approved + salary<span class="desc">Happy path · penny drop</span></button>
+        <button class="toggle-btn" onclick="setPath('p2')">P2 · Approved + no salary<span class="desc">Quick check · 3 options</span></button>
+        <button class="toggle-btn" onclick="setPath('p3')">P3 · Hard reject<span class="desc">Bounces · terminal</span></button>
+        <button class="toggle-btn" onclick="setPath('p4')">P4 · Soft reject + salary<span class="desc">Banking quality rescue</span></button>
+        <button class="toggle-btn" onclick="setPath('p5')">P5 · Soft reject + no salary<span class="desc">Salary search</span></button>
       </div>
 
-      <div class="control-label">2nd statement outcome (if reached):</div>
-      <div class="toggle-row" id="toggle-row-sim2">
-        <button class="toggle-btn active" onclick="setSim2('reject_any')">
-          2nd Sc 2b — Reject (salary detected or not)
-          <span class="desc">→ Hard decline (cap reached)</span>
-        </button>
-        <button class="toggle-btn" onclick="setSim2('approve_det')">
-          2nd Sc 3 — Approved, salary detected
-          <span class="desc">→ Straight through</span>
-        </button>
-        <button class="toggle-btn" onclick="setSim2('approve_no_det')">
-          2nd Sc 4 — Approved, no detection
-          <span class="desc">→ "Are you sure?" (no "lands elsewhere" option)</span>
-        </button>
+      <div class="controls-section-heading">2nd statement · model verdict (paths 2b, 4a, 5a only)</div>
+      <div class="toggle-row" id="toggle-row-path2model">
+        <button class="toggle-btn active" onclick="setPath2Model('appr_sal')">Approved + salary<span class="desc">Trust model · penny drop</span></button>
+        <button class="toggle-btn" onclick="setPath2Model('appr_no_sal')">Approved + no salary<span class="desc">CPA review per cascade</span></button>
+        <button class="toggle-btn" onclick="setPath2Model('soft')">Soft reject<span class="desc">Per cascade rules</span></button>
+        <button class="toggle-btn" onclick="setPath2Model('hard')">Hard reject<span class="desc">Terminal reject</span></button>
       </div>
 
-      <div class="control-label">2nd attempt · AA or Net banking — account returned:</div>
-      <div class="toggle-row" id="toggle-row-acc">
-        <button class="toggle-btn active" onclick="setAccSim('different')">
-          Different account · ••••8901
-          <span class="desc">→ Run model normally</span>
-        </button>
-        <button class="toggle-btn" onclick="setAccSim('same')">
-          Same as 1st attempt · ••••4523
-          <span class="desc">→ "Same account detected" (B4c)</span>
-        </button>
+      <div class="controls-section-heading">2nd attempt · duplicate detection</div>
+      <div class="toggle-row" id="toggle-row-dup">
+        <button class="toggle-btn active" onclick="setDup('different')">Different account<span class="desc">→ Run model normally</span></button>
+        <button class="toggle-btn" onclick="setDup('same_acc')">Same last-4 (AA/NB)<span class="desc">→ B4c · Layer 2</span></button>
+        <button class="toggle-btn" onclick="setDup('same_pdf_hash')">PDF · same hash<span class="desc">→ B4c · Layer 3</span></button>
       </div>
 
-      <div class="control-label">2nd attempt · PDF — what gets uploaded:</div>
-      <div class="toggle-row" id="toggle-row-pdf">
-        <button class="toggle-btn active" onclick="setPdfSim('new_file')">
-          New file · different statement
-          <span class="desc">→ Run model normally</span>
-        </button>
-        <button class="toggle-btn" onclick="setPdfSim('same_hash')">
-          Same file · hash match
-          <span class="desc">→ Block before processing (B4c)</span>
-        </button>
-        <button class="toggle-btn" onclick="setPdfSim('same_period')">
-          Different file · same period
-          <span class="desc">→ Block before processing (B4c)</span>
-        </button>
-      </div>
+      <button class="reset-btn" onclick="resetFlow()">↻ Reset prototype</button>
     </div>
 
     <div class="state-readout">
       <h3>Current state</h3>
-      <div class="state-row">
-        <span class="key">Screen</span>
-        <span class="val brand" id="screen-readout">B1</span>
-      </div>
-      <div class="state-row">
-        <span class="key">Statements tried</span>
-        <span class="val" id="stmt-count">0</span>
-      </div>
-      <div class="state-row">
-        <span class="key">Selected mode</span>
-        <span class="val" id="mode-readout">OTP</span>
-      </div>
-      <div class="state-row">
-        <span class="key">Same-account hits</span>
-        <span class="val" id="dup-readout">0</span>
-      </div>
+      <div class="state-row"><span class="key">Screen</span><span class="val brand" id="screen-readout">B1</span></div>
+      <div class="state-row"><span class="key">Path</span><span class="val"><span class="path-pill none" id="path-readout">—</span></span></div>
+      <div class="state-row"><span class="key">Customer option</span><span class="val" id="option-readout">—</span></div>
+      <div class="state-row"><span class="key">Attempt #</span><span class="val" id="attempt-readout">1</span></div>
+      <div class="state-row"><span class="key">Same-account hits</span><span class="val" id="dup-readout">0</span></div>
+      <div class="cascade-indicator" id="cascade-indicator" style="display:none;"></div>
     </div>
 
-    <div class="step-info">
-      <h4 id="step-title">B1 — Verify income</h4>
-      <p id="step-desc">Customer picks income verification method. OTP based consent is the recommended option. Tap Proceed to simulate the chosen 1st statement outcome.</p>
+    <div class="step-info" id="step-info">
+      <h4 id="step-title">B1 — Verify income mode picker</h4>
+      <p id="step-desc">Customer chooses how to verify their income for the 1st bank statement. OTP-based consent is the recommended path.</p>
     </div>
 
-    <button class="reset-btn" onclick="resetFlow()">Reset to start</button>
-  </aside>
+    <a class="back-to-prfaq" href="https://nikhilsancheti62.github.io/incred-prfaq-artefacts/" target="_blank">← Back to PRFAQ artefacts</a>
+  </div>
 
 </div>
-
 <script>
-  // ============= STATE =============
-  const state = {
-    selectedMode: 'otp',
-    sim1: 'reject_no_det',
-    sim2: 'reject_any',
-    accSim: 'different',
-    pdfSim: 'new_file',
-    sameAccountAttempts: 0,
-    statementCount: 0,
-    currentScreen: 'b1'
-  };
+// ============= STATE =============
+const state = {
+  // 1st attempt
+  mode1: 'otp',
+  bank1: null,
+  path: 'p1',                  // demo control — which 1st-stmt verdict to simulate
 
-  const SCREEN_INFO = {
-    'b1': {
-      title: 'B1 — Verify income',
-      desc: 'Customer picks income verification method. OTP based consent is the recommended option. Tap Proceed to simulate the chosen 1st statement outcome.'
-    },
-    'b2': {
-      title: 'B2 — Statement processing',
-      desc: 'Loader simulating bank model + salary detection. Auto-routes after 2.5s based on the demo control selection.'
-    },
-    'b3': {
-      title: 'B3 — Hard decline',
-      desc: 'Generic decline used for: Sc 1 (model reject + salary found), 2nd statement reject (cap reached), and Sc 4 dead-ends. Single CTA: Done.'
-    },
-    'b4': {
-      title: 'B4 — Soft recovery (NEW)',
-      desc: 'Triggered when model rejects + salary not detected. Includes a one-line reminder under the recovery card to set expectations: "When you log in next, please pick a different account."'
-    },
-    'b4b': {
-      title: 'B4b — Verify income (2nd attempt)',
-      desc: 'Layer 1 lives here. Prominent banner shows the previously-failed account (HDFC ••••4523). After the customer picks a mode and taps Proceed, control passes to AA / Net banking (which we don\'t control) or PDF upload. Layer 2 (account-number comparison) runs after the data returns.'
-    },
-    'b4c': {
-      title: 'B4c — Same account detected (NEW)',
-      desc: 'Layer 2 safety net. After AA/NB returns data, backend compares the returned account\'s last 4 digits against the 1st submission. If match, route here. Two CTAs: pick a different account (back to B4b) or polite decline. Layer 4: 2nd hit in a row routes to polite decline directly.'
-    },
-    'b6': {
-      title: 'B6 — "Are you sure?" (NEW)',
-      desc: 'Triggered on Sc 4. Three options: Yes (silent CPA review via B7), No-different-account (straight to B4b mode picker — customer already said salary is elsewhere, skip the soft recovery ask), Cash (cash salary path). On 2nd statement, "No different account" option is hidden (no retry left).'
-    },
-    'b7': {
-      title: 'B7 — Application under review (NEW)',
-      desc: 'Banking model approved but salary detection failed AND customer confirmed salary lands here. CPA reviews the statement silently. Customer closes app and gets notified via SMS/push when status changes. No salary slip upload — model improvement is the long-term fix for this bucket.'
-    },
-    'b9': {
-      title: 'B9 — Cash salary hold (NEW)',
-      desc: 'Customer indicated cash salary on B6. Profile + signal stored. Polite hold message. Will be reactivated when ABB-based product launches.'
-    },
-    'b5': {
-      title: 'B5 — Offer / Penny drop (existing)',
-      desc: 'End state for Scenario 3 and successful 2nd-statement paths. Shows the offer amount and prompts to verify bank details for disbursal.'
-    }
-  };
+  // customer choice on the recovery / quick-check screen
+  optionPicked: null,          // '2a' | '2b' | '2c' | '4a' | '4b' | '4_none' | '5a' | '5b' | '5_none'
 
-  // ============= NAVIGATION =============
-  function goToScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + id).classList.add('active');
-    state.currentScreen = id;
-    updateStepInfo();
-    updateStateReadout();
+  // 2nd attempt
+  mode2: 'otp',
+  bank2: null,
+  path2model: 'appr_sal',      // demo control — 2nd-stmt verdict to simulate
+  dup: 'different',            // demo control — duplicate detection sim
 
-    // Special handling for B6: hide "no different account" option on 2nd statement
-    if (id === 'b6') {
-      const noOption = document.getElementById('sure-no-option');
-      if (state.statementCount >= 2) {
-        noOption.style.display = 'none';
-      } else {
-        noOption.style.display = 'flex';
-      }
-      // Reset selection
-      document.querySelectorAll('#screen-b6 .option-card').forEach(c => c.classList.remove('selected'));
-      document.getElementById('b6-proceed').disabled = true;
-    }
+  // tracking
+  currentScreen: 'b1',
+  attemptNumber: 1,
+  sameAccountAttempts: 0,
+};
+
+// ============= SCREEN INFO (right-panel step descriptions) =============
+const SCREEN_INFO = {
+  'b1':  { title: 'B1 — Verify income (1st)',
+           desc: 'Customer picks how to verify income for the 1st bank statement: OTP-based consent (default), Net banking, or PDF upload.' },
+  'b1a': { title: 'B1a — Bank picker (1st)',
+           desc: 'Customer picks the bank where their salary is credited. Bank list is constrained by AA vendor support (Perfios/Finbox).' },
+  'b2':  { title: 'B2 — Processing',
+           desc: 'Statement is fetched (AA/NB) or parsed (PDF). The banking model runs and produces one of 5 verdicts.' },
+  'b3':  { title: 'B3 — Standard credit reject',
+           desc: 'Hard reject path or "no other account" fallback. Generic decline — no further explanation given to the customer.' },
+  'b4-2':{ title: 'B4-2 — Quick check on salary (Path 2)',
+           desc: 'Path 2: model approved but no salary detected. 3 options — salary here / different account / cash.' },
+  'b4-4':{ title: 'B4-4 — Recovery offer (Path 4)',
+           desc: 'Path 4: soft reject with salary. Asks for a healthier daily-transactions account for banking-quality rescue.' },
+  'b4-5':{ title: 'B4-5 — Recovery offer (Path 5)',
+           desc: 'Path 5: soft reject without salary. Asks where salary lands — different account or cash.' },
+  'b4b': { title: 'B4b — Verify income (2nd)',
+           desc: 'Mode picker for 2nd statement. Layer 1 banner shows previously-failed account. Copy varies by path.' },
+  'b1b': { title: 'B1b — Bank picker (2nd)',
+           desc: 'Bank picker for 2nd attempt. Same UI as B1a with the previously-failed-account pill at top.' },
+  'b4c': { title: 'B4c — Same account detected',
+           desc: 'Layer 2 duplicate defense. AA/NB returned same last-4 digits OR PDF hash/period match. 2nd hit → polite decline.' },
+  'b5':  { title: 'B5 — Welcome / offer hold',
+           desc: 'Customer is approved. Welcome screen shows the loan offer with a sub-card prompting bank verification. Tapping Continue moves to B5b.' },
+  'b5b': { title: 'B5b — Verify bank details (penny drop)',
+           desc: 'Customer enters bank name, account number, and IFSC for the disbursal/repayment account. ₹1 penny drop verification happens after Verify account.' },
+  'b6':  { title: 'B6 — Application under review',
+           desc: 'Silent CPA review. Used for Path 2a/2c, Path 2b "approved + no salary" (CPA reads both), 4a hybrid underwriting, 5a "approved + no salary" (CPA reads stmt 2 only).' },
+  'b9':  { title: 'B9 — Cash salary hold',
+           desc: 'Path 2c (with cash flag for CPA), 4b, 5b. Profile tagged for future ABB underwriting product.' },
+};
+
+// ============= NAVIGATION CORE =============
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + id);
+  if (el) el.classList.add('active');
+  state.currentScreen = id;
+  updateStateReadout();
+  updateStepInfo();
+}
+
+function updateStepInfo() {
+  const info = SCREEN_INFO[state.currentScreen];
+  if (!info) return;
+  document.getElementById('step-title').textContent = info.title;
+  document.getElementById('step-desc').textContent = info.desc;
+}
+
+function updateStateReadout() {
+  document.getElementById('screen-readout').textContent = state.currentScreen.toUpperCase();
+  const pathEl = document.getElementById('path-readout');
+  pathEl.textContent = state.path ? state.path.toUpperCase() : '—';
+  pathEl.className = 'path-pill ' + (state.path || 'none');
+  document.getElementById('option-readout').textContent = state.optionPicked || '—';
+  document.getElementById('attempt-readout').textContent = state.attemptNumber;
+  document.getElementById('dup-readout').textContent = state.sameAccountAttempts;
+
+  // cascade indicator — shows what cascade rule applies if user is on a 2nd-stmt-relevant screen
+  const ind = document.getElementById('cascade-indicator');
+  let cascadeText = '';
+  if (state.optionPicked === '2b') cascadeText = '<strong>Cascade A (2b):</strong> on 2nd-stmt soft reject, drop stmt 2 and CPA reads stmt 1 only. On approved+no-salary, CPA reads both.';
+  else if (state.optionPicked === '4a') cascadeText = '<strong>Cascade B (4a):</strong> hybrid underwriting on approved+no-salary (banking from acc 2, salary from acc 1) — pending policy.';
+  else if (state.optionPicked === '5a') cascadeText = '<strong>Cascade C (5a):</strong> on 2nd-stmt approved+no-salary, CPA reads stmt 2 only — stmt 1 discarded.';
+  if (cascadeText) {
+    ind.style.display = 'block';
+    ind.innerHTML = cascadeText;
+  } else {
+    ind.style.display = 'none';
   }
+}
 
-  function updateStepInfo() {
-    const info = SCREEN_INFO[state.currentScreen];
-    if (!info) return;
-    document.getElementById('step-title').textContent = info.title;
-    document.getElementById('step-desc').textContent = info.desc;
+// ============= 1ST ATTEMPT — MODE & BANK =============
+function selectMode1(mode) {
+  state.mode1 = mode;
+  document.querySelectorAll('#screen-b1 .option-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.mode === mode);
+  });
+}
+
+function proceedFromB1() {
+  // PDF mode skips bank picker
+  if (state.mode1 === 'pdf') {
+    runFirstStatement();
+  } else {
+    goToScreen('b1a');
   }
+}
 
-  function updateStateReadout() {
-    document.getElementById('screen-readout').textContent = state.currentScreen.toUpperCase();
-    document.getElementById('stmt-count').textContent = state.statementCount;
-    document.getElementById('mode-readout').textContent = state.selectedMode === 'otp' ? 'OTP' : (state.selectedMode === 'netbanking' ? 'Net banking' : 'PDF');
-    document.getElementById('dup-readout').textContent = state.sameAccountAttempts;
+function selectBank1(el, bankName) {
+  state.bank1 = bankName;
+  document.querySelectorAll('#screen-b1a .popular-bank-card').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.getElementById('b1a-proceed');
+  btn.disabled = false;
+  btn.textContent = 'Proceed with ' + bankName;
+}
+
+function proceedFromB1a() {
+  runFirstStatement();
+}
+
+function runFirstStatement() {
+  state.attemptNumber = 1;
+  goToScreen('b2');
+  setTimeout(() => routeFromPath1Verdict(), 2500);
+}
+
+// ============= ROUTING AFTER 1ST MODEL =============
+function routeFromPath1Verdict() {
+  switch (state.path) {
+    case 'p1': goToScreen('b5'); break;            // approved + salary → penny drop
+    case 'p2': goToScreen('b4-2'); break;          // approved + no salary → quick check
+    case 'p3': goToScreen('b3'); break;            // hard reject
+    case 'p4': goToScreen('b4-4'); break;          // soft reject + salary → banking rescue
+    case 'p5': goToScreen('b4-5'); break;          // soft reject + no salary → salary search
   }
+}
 
-  // ============= MODE & OPTION SELECTION =============
-  function selectMode(mode) {
-    state.selectedMode = mode;
-    document.querySelectorAll('#screen-b1 .option-card').forEach(c => {
-      c.classList.toggle('selected', c.dataset.mode === mode);
-    });
-    updateStateReadout();
+// ============= PATH 2 — QUICK CHECK =============
+function selectOption2(el, opt) {
+  state.optionPicked = opt;
+  document.querySelectorAll('#screen-b4-2 .option-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.opt === opt);
+  });
+  document.getElementById('b4-2-proceed').disabled = false;
+  updateStateReadout();
+}
+
+function proceedFromB4_2() {
+  switch (state.optionPicked) {
+    case '2a':
+      // CPA reads stmt 1 → silent under-review
+      goToScreen('b6');
+      break;
+    case '2b':
+      // Submit 2nd statement
+      configureB4bForPath();
+      goToScreen('b4b');
+      break;
+    case '2c':
+      // CPA reviews with cash flag → silent under-review (B6) — same screen, but 'cash' state
+      goToScreen('b6');
+      break;
   }
+}
 
-  function selectGenericOption(el) {
-    const parent = el.parentElement;
-    parent.querySelectorAll('.option-card').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
+// ============= PATH 4 / 5 — RECOVERY OFFERS =============
+function pickRecoveryOption(opt) {
+  state.optionPicked = opt;
+  updateStateReadout();
+  switch (opt) {
+    case '4a':
+      configureB4bForPath();
+      goToScreen('b4b');
+      break;
+    case '4b':
+      // cash → reject (Path 4)
+      goToScreen('b3');
+      break;
+    case '4_none':
+      goToScreen('b3');
+      break;
+    case '5a':
+      configureB4bForPath();
+      goToScreen('b4b');
+      break;
+    case '5b':
+      goToScreen('b3');
+      break;
+    case '5_none':
+      goToScreen('b3');
+      break;
   }
+}
 
-  // B4b mode picker — also captures which mode was chosen so PDF-specific logic can engage
-  function selectVerifyMode(el, mode) {
-    state.selectedMode = mode;
-    document.querySelectorAll('#screen-b4b .option-card').forEach(c => {
-      c.classList.toggle('selected', c.dataset.mode === mode);
-    });
-    updateStateReadout();
+// ============= 2ND ATTEMPT — CONFIGURE B4B BANNER COPY =============
+function configureB4bForPath() {
+  // Set up B4b banner + B1b banner copy based on which path we're in
+  const bank = state.bank1 || 'HDFC';
+  let pillText, b4bSubtitle, b1bSubtitle;
+  if (state.optionPicked === '2b' || state.optionPicked === '5a') {
+    pillText = `Previously tried: <strong>${bank} ••••4523</strong> — could not detect salary. Pick a different account.`;
+    b4bSubtitle = 'Pick the account where your salary is regularly credited.';
+    b1bSubtitle = 'Pick the bank where your salary is credited.';
+  } else if (state.optionPicked === '4a') {
+    pillText = `Previously tried: <strong>${bank} ••••4523</strong> — could not approve. Pick a primary account used for daily transactions.`;
+    b4bSubtitle = 'Pick the bank account you use for your daily transactions — the healthier of the two if you can.';
+    b1bSubtitle = 'Pick the bank where you have your daily-transactions account.';
   }
+  document.getElementById('b4b-prev-pill').innerHTML = pillText;
+  document.getElementById('b4b-subtitle').textContent = b4bSubtitle;
+  document.getElementById('b1b-prev-pill').innerHTML = pillText;
+  document.getElementById('b1b-subtitle').textContent = b1bSubtitle;
+}
 
-  function selectSureOption(value) {
-    state.sureChoice = value;
-    document.querySelectorAll('#screen-b6 .option-card').forEach(c => {
-      c.classList.toggle('selected', c.dataset.sure === value);
-    });
-    document.getElementById('b6-proceed').disabled = false;
+function selectMode2(el, mode) {
+  state.mode2 = mode;
+  document.querySelectorAll('#screen-b4b .option-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.mode === mode);
+  });
+}
+
+function proceedFromB4b() {
+  // PDF mode → run duplicate detection then 2nd model
+  if (state.mode2 === 'pdf') {
+    handle2ndStatementSubmission(/* hasBankPicker */ false);
+  } else {
+    goToScreen('b1b');
   }
+}
 
-  // ============= STATEMENT FLOW =============
-  function proceedFromB1() {
-    state.statementCount = 1;
-    goToScreen('b2');
+function selectBank2(el, bankName) {
+  state.bank2 = bankName;
+  document.querySelectorAll('#screen-b1b .popular-bank-card').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.getElementById('b1b-proceed');
+  btn.disabled = false;
+  btn.textContent = 'Proceed with ' + bankName;
+}
 
-    setTimeout(() => {
-      routeFromOutcome(state.sim1, true);
-    }, 2500);
-  }
+function proceedFromB1b() {
+  handle2ndStatementSubmission(/* hasBankPicker */ true);
+}
 
-  function proceedFromB4b() {
-    // PDF mode — front-loaded duplicate detection on the file itself, before AA/NB-style flow runs
-    if (state.selectedMode === 'pdf') {
-      if (state.pdfSim === 'same_hash' || state.pdfSim === 'same_period') {
-        state.sameAccountAttempts += 1;
-        if (state.sameAccountAttempts >= 2) {
-          goToScreen('b3');
-          return;
-        }
-        showPdfDuplicateMessage(state.pdfSim);
-        goToScreen('b4c');
-        return;
-      }
-      // New PDF — reset and process
-      state.sameAccountAttempts = 0;
-      state.statementCount = 2;
-      goToScreen('b2');
-      setTimeout(() => routeFromOutcome(state.sim2, false), 2500);
+function goBackFromB4b() {
+  // Goes back to whichever recovery screen sent us here
+  if (state.optionPicked === '2b') goToScreen('b4-2');
+  else if (state.optionPicked === '4a') goToScreen('b4-4');
+  else if (state.optionPicked === '5a') goToScreen('b4-5');
+  else goToScreen('b1');
+}
+
+// ============= 2ND STATEMENT SUBMISSION + CASCADES =============
+function handle2ndStatementSubmission(hadBankPicker) {
+  state.attemptNumber = 2;
+
+  // Check duplicate detection first
+  const dupTriggers = ['same_acc', 'same_pdf_hash'];
+  if (dupTriggers.includes(state.dup)) {
+    state.sameAccountAttempts += 1;
+    // Layer 4: 2nd hit = direct decline
+    if (state.sameAccountAttempts >= 2) {
+      goToScreen('b3');
       return;
     }
-
-    // AA / Net banking — Layer 2: compare returned account's last 4 digits with previous submission
-    if (state.accSim === 'same') {
-      state.sameAccountAttempts += 1;
-      // Layer 4 strict: 2nd hit in a row routes to polite decline directly
-      if (state.sameAccountAttempts >= 2) {
-        goToScreen('b3');
-        return;
-      }
-      showAccountDuplicateMessage();
-      goToScreen('b4c');
-      return;
-    }
-
-    // Different account → reset counter, proceed to 2nd statement processing
-    state.sameAccountAttempts = 0;
-    state.statementCount = 2;
-    goToScreen('b2');
-    setTimeout(() => routeFromOutcome(state.sim2, false), 2500);
+    showDuplicateMessage(state.dup);
+    goToScreen('b4c');
+    return;
   }
 
-  function showAccountDuplicateMessage() {
+  // Different account — proceed to 2nd-statement processing
+  state.sameAccountAttempts = 0;
+  goToScreen('b2');
+  setTimeout(() => routeFromPath2Verdict(), 2500);
+}
+
+function showDuplicateMessage(reason) {
+  const bank = state.bank2 || state.bank1 || 'HDFC';
+  if (reason === 'same_acc') {
     document.getElementById('b4c-title').textContent = 'Looks like the same account';
     document.getElementById('b4c-body').innerHTML =
-      'Your bank returned the account <strong>HDFC ••••4523</strong>, which we already checked. To verify your salary, please choose a different account.';
+      `Your bank returned the account <strong>${bank} ••••4523</strong>, which we already checked. To verify your salary, please choose a different account.`;
     document.getElementById('b4c-tip').textContent =
-      'If you have a salary account at the same bank, it\'ll have a different account number. Pick the same bank again and select that one when prompted.';
-  }
-
-  function showPdfDuplicateMessage(reason) {
-    document.getElementById('b4c-title').textContent =
-      reason === 'same_hash' ? 'Same file uploaded' : 'Same statement period';
+      "If you have a salary account at the same bank, it'll have a different account number. Pick the same bank again and select that one when prompted.";
+  } else if (reason === 'same_pdf_hash') {
+    document.getElementById('b4c-title').textContent = 'Same file uploaded';
     document.getElementById('b4c-body').innerHTML =
-      reason === 'same_hash'
-        ? 'You uploaded the same statement file (<strong>HDFC ••••4523</strong>) we already checked. Please upload a different statement.'
-        : 'This statement covers the same period as your earlier submission for <strong>HDFC ••••4523</strong>. Please upload a different statement.';
+      `You uploaded the same statement file we already checked. Please upload a different statement.`;
     document.getElementById('b4c-tip').textContent =
-      'You can download a fresh statement from your bank\'s app or net banking portal — pick a different account if you have one.';
+      "Download a fresh statement from your bank's app or net banking portal — pick a different account if you have one.";
   }
+}
 
-  function routeFromOutcome(outcome, isFirst) {
-    if (outcome === 'reject_det') {
-      goToScreen('b3');
-    } else if (outcome === 'reject_no_det') {
-      goToScreen('b4');
-    } else if (outcome === 'reject_any') {
-      goToScreen('b3');
-    } else if (outcome === 'approve_det') {
+function onNoOtherAccount() {
+  // From B4c. Routing depends on which path we're in.
+  if (state.optionPicked === '2b') {
+    // 2b "no other account" → CPA reads stmt 1 (treat as 2a)
+    goToScreen('b6');
+  } else {
+    // 4a, 5a → standard credit reject
+    goToScreen('b3');
+  }
+}
+
+// ============= ROUTING AFTER 2ND MODEL — THE CASCADES =============
+function routeFromPath2Verdict() {
+  const m = state.path2model;
+  const opt = state.optionPicked;
+
+  // ---- Cascade A — from 2b ----
+  if (opt === '2b') {
+    if (m === 'appr_sal') {
+      // Penny drop on acc 2 · trust model
+      setOfferBanner('Account 2 verified · disbursal and repayment will use account 2');
       goToScreen('b5');
-    } else if (outcome === 'approve_no_det') {
+    } else if (m === 'appr_no_sal') {
+      // CPA reads BOTH statements
       goToScreen('b6');
+    } else if (m === 'soft') {
+      // Drop stmt 2 → CPA reads stmt 1 only
+      goToScreen('b6');
+    } else if (m === 'hard') {
+      // Reject — terminal
+      goToScreen('b3');
     }
+    return;
   }
 
-  // ============= "ARE YOU SURE?" RESPONSES =============
-  function proceedFromB6() {
-    if (state.sureChoice === 'yes') {
-      goToScreen('b7');
-    } else if (state.sureChoice === 'no') {
-      // Customer already told us salary lands elsewhere — skip B4 (which asks the same question)
-      // and go straight to mode picker for the 2nd account
-      goToScreen('b4b');
-    } else if (state.sureChoice === 'cash') {
-      goToScreen('b9');
+  // ---- Cascade B — from 4a ----
+  if (opt === '4a') {
+    if (m === 'appr_sal') {
+      // Manual review with acc 2 as primary (rare scenario)
+      // → B6 under-review screen — NOT B5 (offer)
+      goToScreen('b6');
+    } else if (m === 'appr_no_sal') {
+      // Hybrid underwriting → generic under-review screen (per user direction)
+      goToScreen('b6');
+    } else if (m === 'soft') {
+      goToScreen('b3');
+    } else if (m === 'hard') {
+      goToScreen('b3');
     }
+    return;
   }
 
-  // ============= SIMULATION CONTROLS =============
-  function setSim1(value) {
-    state.sim1 = value;
-    document.querySelectorAll('#toggle-row-sim1 .toggle-btn').forEach((btn, idx) => {
-      const values = ['reject_det', 'reject_no_det', 'approve_det', 'approve_no_det'];
-      btn.classList.toggle('active', values[idx] === value);
+  // ---- Cascade C — from 5a ----
+  if (opt === '5a') {
+    if (m === 'appr_sal') {
+      // Penny drop on acc 2 · trust model
+      setOfferBanner('Account 2 verified · disbursal and repayment will use account 2');
+      goToScreen('b5');
+    } else if (m === 'appr_no_sal') {
+      // CPA reads stmt 2 only · stmt 1 discarded
+      goToScreen('b6');
+    } else if (m === 'soft') {
+      goToScreen('b3');
+    } else if (m === 'hard') {
+      goToScreen('b3');
+    }
+    return;
+  }
+}
+
+function setOfferBanner(text) {
+  const banner = document.getElementById('offer-account-banner');
+  if (banner) banner.textContent = text;
+}
+
+// Validate B5b form — enable Verify button only when all 3 fields filled
+function setupB5bValidation() {
+  const fields = ['b5b-bank', 'b5b-acc', 'b5b-ifsc'];
+  const btn = document.getElementById('b5b-verify');
+  function check() {
+    const allFilled = fields.every(id => {
+      const el = document.getElementById(id);
+      return el && el.value.trim().length > 0;
     });
+    if (btn) btn.disabled = !allFilled;
   }
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', check);
+  });
+}
 
-  function setSim2(value) {
-    state.sim2 = value;
-    document.querySelectorAll('#toggle-row-sim2 .toggle-btn').forEach((btn, idx) => {
-      const values = ['reject_any', 'approve_det', 'approve_no_det'];
-      btn.classList.toggle('active', values[idx] === value);
-    });
-  }
-
-  function setAccSim(value) {
-    state.accSim = value;
-    document.querySelectorAll('#toggle-row-acc .toggle-btn').forEach((btn, idx) => {
-      const values = ['different', 'same'];
-      btn.classList.toggle('active', values[idx] === value);
-    });
-  }
-
-  function setPdfSim(value) {
-    state.pdfSim = value;
-    document.querySelectorAll('#toggle-row-pdf .toggle-btn').forEach((btn, idx) => {
-      const values = ['new_file', 'same_hash', 'same_period'];
-      btn.classList.toggle('active', values[idx] === value);
-    });
-  }
-
-  // ============= RESET =============
-  function resetFlow() {
-    state.selectedMode = 'otp';
-    state.statementCount = 0;
-    state.sureChoice = null;
-    state.sameAccountAttempts = 0;
-    state.accSim = 'different';
-    state.pdfSim = 'new_file';
-    state.currentScreen = 'b1';
-
-    selectMode('otp');
-    setAccSim('different');
-    setPdfSim('new_file');
-    document.getElementById('b6-proceed').disabled = true;
-    document.querySelectorAll('#screen-b6 .option-card').forEach(c => c.classList.remove('selected'));
-
-    goToScreen('b1');
-  }
-
-  // Init
-  updateStepInfo();
+// ============= DEMO CONTROLS =============
+function setPath(p) {
+  state.path = p;
+  document.querySelectorAll('#toggle-row-path .toggle-btn').forEach((btn, idx) => {
+    const vals = ['p1', 'p2', 'p3', 'p4', 'p5'];
+    btn.classList.toggle('active', vals[idx] === p);
+  });
   updateStateReadout();
+}
+
+function setPath2Model(m) {
+  state.path2model = m;
+  document.querySelectorAll('#toggle-row-path2model .toggle-btn').forEach((btn, idx) => {
+    const vals = ['appr_sal', 'appr_no_sal', 'soft', 'hard'];
+    btn.classList.toggle('active', vals[idx] === m);
+  });
+}
+
+function setDup(d) {
+  state.dup = d;
+  document.querySelectorAll('#toggle-row-dup .toggle-btn').forEach((btn, idx) => {
+    const vals = ['different', 'same_acc', 'same_pdf_hash'];
+    btn.classList.toggle('active', vals[idx] === d);
+  });
+}
+
+// ============= RESET =============
+function resetFlow() {
+  state.mode1 = 'otp';
+  state.bank1 = null;
+  state.optionPicked = null;
+  state.mode2 = 'otp';
+  state.bank2 = null;
+  state.attemptNumber = 1;
+  state.sameAccountAttempts = 0;
+  state.currentScreen = 'b1';
+
+  // Reset UI
+  selectMode1('otp');
+  document.getElementById('b1a-proceed').disabled = true;
+  document.getElementById('b1a-proceed').textContent = 'Proceed';
+  document.querySelectorAll('#screen-b1a .popular-bank-card').forEach(b => b.classList.remove('selected'));
+
+  document.getElementById('b1b-proceed').disabled = true;
+  document.getElementById('b1b-proceed').textContent = 'Proceed';
+  document.querySelectorAll('#screen-b1b .popular-bank-card').forEach(b => b.classList.remove('selected'));
+
+  document.getElementById('b4-2-proceed').disabled = true;
+  document.querySelectorAll('#screen-b4-2 .option-card').forEach(c => c.classList.remove('selected'));
+
+  document.querySelectorAll('#screen-b4b .option-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.mode === 'otp');
+  });
+
+  setOfferBanner('Salary account verified · disbursal and repayment will use this account');
+
+  // Reset B5b form
+  ['b5b-bank', 'b5b-acc', 'b5b-ifsc'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  const verifyBtn = document.getElementById('b5b-verify');
+  if (verifyBtn) verifyBtn.disabled = true;
+
+  goToScreen('b1');
+}
+
+// Init
+updateStepInfo();
+updateStateReadout();
+setupB5bValidation();
 </script>
 
 </body>
